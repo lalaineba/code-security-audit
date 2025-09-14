@@ -77,6 +77,7 @@ export const updateEmployee = async (
     };
 
     // Spread operator: merges any existing item (that we didn't update) with the updated data
+    // Then create a new instance of that employee item
     employees[index] = { ...employees[index], ...employeeData };
 
     return structuredClone(employees[index]);

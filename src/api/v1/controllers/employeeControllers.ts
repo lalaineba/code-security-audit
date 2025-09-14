@@ -1,16 +1,25 @@
 import { Request, Response, NextFunction } from "express";
 import * as employeeServices from "../services/employeeServices";
-import { Employee, employees } from "src/data/employees";
+import { employees } from "src/data/employees";
+import { Employee } from "../models/models";
 
+/**
+ * Manages requests and responses to retrieve all employees.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const getAllEmployees = async (
     req: Request,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
     try {
+        // await pauses the execution of the async functions in the employeeServices
+        // until the Promise is resolved, so we get the actual employees array before sending the response
         const employees: Employee[] = await employeeServices.getAllEmployees();
         res.status(200).json({ 
-            message: "Get all employees", 
+            message: "Employees retrieved successfully", 
             data: employees,
         });
     } catch (error: unknown) {
@@ -18,13 +27,20 @@ export const getAllEmployees = async (
     }
 };
 
+/**
+ * Manages requests and responses to retrieve an employee item.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const getEmployeeByID = async (
     req: Request,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
     try {
-        const id: number = req.params.id; 
+        // req.params are always strings by default so we need to convert the id to number
+        const id: number = parseInt(req.params.id); 
         await employeeServices.getEmployeeByID(id);
          res.status(200).json({
             message: "Get an employee",
@@ -35,12 +51,104 @@ export const getEmployeeByID = async (
     }
 };
 
+/**
+ * Manages requests and responses to create an employee.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const createEmployee = async (
     req: Request,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
     try {
+        // Validations to check for some required fields
+        // if the rquest body is falsy, respond with a message
         if (!req.body.name) {
-            res.status()
+            res.status(404).json({
+                message: "Employee name is required",
+            });
+        } else if (!req.body.position) {
+            res.status(404).json({
+                message: "Employee position is required",
+            });
+        } else if (!req.body.department) {
+            res.status(404).json({
+                message: "Employee department is required",
+            });
+        } else if (!req.body.email) {
+            res.status(404).json({
+                message: "Employee email is required",
+            });
+        } else if (!req.body.phone) {
+            res.status(404).json({
+                message: "Employee phone number is required",
+            });
+        } else if (!req.body.branchId) {
+            res.status(404).json({
+                message: "Employee branch ID is required",
+            });
+        
+        const { name, position, department, email, phone, branchId } = req.body;
+        const newEmployee: Employee = await employeeServices.createEmployee({
+            name, position, department, email, phone, branchId
+        });
+        res.status(201).json({
+            message: "Employee created successfully",
+            data: newEmployee,
+        });
         }
+    } catch (error: unknown) {
+        next(error);
+    };
+};
+
+/**
+ * Manages requests and responses to update an employee.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const updateEmployee = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const id: number = parseInt(req.params.id);
+        // Extracting the fields to be updated from the body
+        const { position, phone } = req.body;
+        // Create the update employee object with fields to be updated
+        const updatedEmployee: Employee = await employeeServices.updateEmployee(id, { position, phone });
+        res.status(200).json({
+            message: "Employee updated successfully",
+            data: updatedEmployee,
+        });
+    } catch (error: unknown) {
+    next(error);
+    }
+};
+
+/**
+ * Manages requests and responses to delete an employee.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const deleteEmployee = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        await employeeServices.deleteEmployee(id);
+        res.status(200).json({
+            message: "Employee deleted successfully",
+        });
+    } catch (error: unknown) {
+        next(error);
+    }
+};
