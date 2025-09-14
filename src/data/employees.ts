@@ -8,6 +8,7 @@ export interface Employee {
     phone: string;
     branchId: number;
 }
+
 /**
  * An array containing all the employee data
  */
