@@ -1,4 +1,6 @@
-// Interface for the Employee structure
+/**
+ * Interface for the Employee structure.
+ */
 export interface Employee {
     id: number;
     name: string;
@@ -9,7 +11,9 @@ export interface Employee {
     branchId: number;
 }
 
-// Interface for the Branch structure
+/**
+ * Interface for the Branch structure. 
+ */
 export interface Branch {
     id: number;
     name: string;

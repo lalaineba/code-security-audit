@@ -1,9 +1,19 @@
-import { Employee, employees } from "src/data/employees";
+import { employees } from "src/data/employees";
+import { Employee } from "../models/models";
 
+/**
+ * Retrieves all employees from storage
+ * @returns Array of all employees
+ */
 export const getAllEmployees = async(): Promise<Employee[]> => {
     return structuredClone(employees);
 };
 
+/**
+ * Creates a new employee item
+ * @param employeeData The data for the new employee
+ * @returns The created employee with generated employee ID
+ */
 export const createEmployee = async (employeeData: {
     name: string;
     position: string;
@@ -29,6 +39,12 @@ export const createEmployee = async (employeeData: {
     return structuredClone(newEmployee);
 };
 
+/**
+ * Retrieves an employee by its ID
+ * @param id The ID of the employee
+ * @returns An employee item with its data 
+ * @throws An error if employee ID is not found
+ */
 export const getEmployeeByID = async (id: number): Promise<Employee[]> => {
     // in the employee array, find an employee id that's equal to the parameter we received
     const index: number = employees.findIndex((employee: Employee) => employee.id === id);
@@ -40,6 +56,14 @@ export const getEmployeeByID = async (id: number): Promise<Employee[]> => {
 
     return structuredClone(employees);
 };
+
+/**
+ * Updates an existing employee
+ * @param id The ID of the employee to update
+ * @param employeeData The fields to update (position and phone)
+ * @returns The new updated employee data
+ * @throws An error if employee ID is not found
+ */
 
 export const updateEmployee = async (
     id: number,
@@ -57,6 +81,12 @@ export const updateEmployee = async (
 
     return structuredClone(employees[index]);
 };
+
+/**
+ * Deletes an employee from storage
+ * @param id The ID of the employee to delete
+ * @throws An error if employee ID is not found
+ */
 
 export const deleteEmployee = async (id: number): Promise<void> => {
     const index: number = employees.findIndex((employee: Employee) => employee.id === id);
