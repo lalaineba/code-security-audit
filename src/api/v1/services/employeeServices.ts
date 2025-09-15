@@ -76,7 +76,8 @@ export const updateEmployee = async (
         throw new Error(`Employee ID: ${id} not found.`);
     };
 
-    // Spread operator: merges any existing item (that we didn't update) with the updated data
+    // Spread operator: takes each value of the employee and reapply it to the new updated employee
+    // Basically merges any existing item (that we didn't update) with the updated data
     // Then create a new instance of that employee item
     employees[index] = { ...employees[index], ...employeeData };
 
