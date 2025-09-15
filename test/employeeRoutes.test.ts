@@ -33,6 +33,12 @@ describe("Employee Routes", () => {
             await request(app).get(`/api/v1/employees/${testId}`);
             expect(employeeControllers.getEmployeeByID).toHaveBeenCalled();
         });
+
+    // Test employee by ID retrieval with missing ID parameter
+        it("should not get an employee if ID is missing", async () => {
+            await request(app).get("/api/v1/employees/");
+            expect(employeeControllers.getEmployeeByID).not.toHaveBeenCalled();
+        });
     });
 
     // Test successful employee creation
@@ -52,7 +58,7 @@ describe("Employee Routes", () => {
         });
 
         // Test with missing parameters
-        it("should create a new employee", async () => {
+        it("should fail to create an employee", async () => {
             const incompleteEmployee = {
                 name: "",
                 position: "",
@@ -61,7 +67,43 @@ describe("Employee Routes", () => {
             await request(app).post("/api/v1/employees").send(incompleteEmployee);
             expect(employeeControllers.createEmployee).toHaveBeenCalled();
         });
-
-    
     });
-});
+
+    // Test successful employee update
+    describe("PUT /api/v1/employees/:id", () => {
+        it("should call updateEmployee controller with valid data", async() => {
+            const mockUpdateData = {
+                position: "Updated Position",
+                phone: "Updated Phone",
+            };
+
+            await request(app).put("/api/v1/employees/testid").send(mockUpdateData);
+            expect(employeeControllers.updateEmployee).toHaveBeenCalled();
+        });
+
+        // Test employee update with missing required parameters
+        it("should not update employee with missing parameters", async() => {
+            const mockMissingData = {
+                position: "",
+                phone: "",
+            };
+
+            await request(app).put("/api/v1/employees/testid").send(mockMissingData);
+            expect(employeeControllers.updateEmployee).toHaveBeenCalled();
+        });
+    });
+
+    // Test successful employee deletion
+    describe("DELETE /api/v1/employees/:id", () => {
+        it("should call deleteEmployee controller with valid data", async() => {
+            await request(app).delete("/api/v1/employees/testid");
+            expect(employeeControllers.deleteEmployee).toHaveBeenCalled();
+            });
+    });
+
+    // Test employee deletion with missing ID parameter
+        it("should not delete an employee if ID is missing", async() => {
+            await request(app).delete("/api/v1/employees/");
+            expect(employeeControllers.deleteEmployee).not.toHaveBeenCalled();
+            });
+    });
