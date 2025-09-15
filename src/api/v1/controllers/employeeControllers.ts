@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as employeeServices from "../services/employeeServices";
-import { employees } from "src/data/employees";
+import { employees } from "../../../data/employees";
 import { Employee } from "../models/models";
 
 /**
@@ -63,7 +63,7 @@ export const createEmployee = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        // Validations to check for some required fields
+        // Validations to check for the required fields
         // if the rquest body is falsy, respond with a message
         if (!req.body.name) {
             res.status(404).json({

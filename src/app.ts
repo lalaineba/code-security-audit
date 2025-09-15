@@ -1,6 +1,8 @@
 import express, { Express } from "express";
 import morgan from "morgan";
 
+import employeeRoutes from "./api/v1/routes/employeeRoutes";
+
 // initialize the express application
 const app: Express = express();
 
@@ -15,6 +17,7 @@ interface HealthCheckResponse {
 // Use morgan as a middleware for HTTP request logging
 // "combined" is a predefined format for morgan
 app.use(morgan("combined"));
+app.use(express.json());
 
 // Respond to GET request at endpoint "/" with message
 app.get("/", (req, res) => {
@@ -37,5 +40,7 @@ app.get("/api/v1/health", (req, res) => {
     res.json(healthData);
 });
 
-export default app;
+// Create a prefix for all employee routes
+app.use("/api/v1/employees", employeeRoutes);
 
+export default app;

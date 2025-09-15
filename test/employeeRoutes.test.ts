@@ -1,0 +1,67 @@
+import request from "supertest";
+import app from "../src/app";
+import * as employeeControllers from "../src/api/v1/controllers/employeeControllers";
+import * as employeeServices from "../src/api/v1/services/employeeServices";
+
+// Mock this file
+jest.mock("../src/api/v1/controllers/employeeControllers", () => ({
+    getAllEmployees: jest.fn((req, res) => res.status(200).send()),
+    getEmployeeByID: jest.fn((req, res) => res.status(200).send()),
+    createEmployee: jest.fn((req, res) => res.status(201).send()),
+    updateEmployee: jest.fn((req, res) => res.status(200).send()),
+    deleteEmployee: jest.fn((req, res) => res.status(200).send())
+}));
+
+// To test that the paths are mapped to the controllers correctly
+describe("Employee Routes", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    // Test to verify that all employee records are returned as an array
+    describe("GET /api/v1/employees/", () => {
+        it("should return an array of all employees", async () => {
+            await request(app).get("/api/v1/employees");
+            expect(employeeControllers.getAllEmployees).toHaveBeenCalled();
+        });
+    });
+
+    // Test employee by ID successful retrieval
+    describe("GET /api/v1/employees/:id", () => {
+        it("should return an employee by ID", async () => {
+            const testId = 1;
+            await request(app).get(`/api/v1/employees/${testId}`);
+            expect(employeeControllers.getEmployeeByID).toHaveBeenCalled();
+        });
+    });
+
+    // Test successful employee creation
+    describe("POST /api/v1/employees/", () => {
+        it("should create a new employee", async () => {
+            const mockEmployee = {
+                name: "Test Name",
+                position: "Test Position",
+                department: "Test Department",
+                email: "test.email@pixell-river.com",
+                phone: "000-000-0000", 
+                branchId: 1,
+            };
+
+            await request(app).post("/api/v1/employees").send(mockEmployee);
+            expect(employeeControllers.createEmployee).toHaveBeenCalled();
+        });
+
+        // Test with missing parameters
+        it("should create a new employee", async () => {
+            const incompleteEmployee = {
+                name: "",
+                position: "",
+            };
+
+            await request(app).post("/api/v1/employees").send(incompleteEmployee);
+            expect(employeeControllers.createEmployee).toHaveBeenCalled();
+        });
+
+    
+    });
+});
