@@ -41,10 +41,10 @@ export const getEmployeeByID = async (
     try {
         // req.params are always strings by default so we need to convert the id to number
         const id: number = parseInt(req.params.id); 
-        await employeeServices.getEmployeeByID(id);
+        const employee = await employeeServices.getEmployeeByID(id);
          res.status(200).json({
             message: "Get an employee",
-            data: employees,
+            data: employee,
         });
     } catch (error: unknown) {
         next(error);

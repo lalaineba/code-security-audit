@@ -45,16 +45,17 @@ export const createEmployee = async (employeeData: {
  * @returns An employee item with its data 
  * @throws An error if employee ID is not found
  */
-export const getEmployeeByID = async (id: number): Promise<Employee[]> => {
+export const getEmployeeByID = async (id: number): Promise<Employee> => {
+    let allEmployees = await getAllEmployees(); 
     // in the employee array, find an employee id that's equal to the parameter we received
-    const index: number = employees.findIndex((employee: Employee) => employee.id === id);
+    const employee: Employee | undefined = allEmployees.find((employee: Employee) => employee.id === id);
 
     // -1 means it didnt find it. There's no index in the array
-    if (index === -1) {
+    if (!employee) {
         throw new Error(`Employee ID: ${id} not found.`);
     };
 
-    return structuredClone(employees);
+    return structuredClone(employee);
 };
 
 /**

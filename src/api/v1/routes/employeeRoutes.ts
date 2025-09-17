@@ -4,6 +4,9 @@ import * as employeeControllers from "../controllers/employeeControllers";
 
 const router: Router = express.Router();
 
+/**
+ * Defining routes for Employee management
+ */
 router.get("/", employeeControllers.getAllEmployees);
 router.get("/:id", employeeControllers.getEmployeeByID);
 router.post("/", employeeControllers.createEmployee);
