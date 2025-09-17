@@ -35,3 +35,36 @@ export const getBranchByID = async (
         next(error);
     }
 };
+
+export const createBranch = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        if (!req.body.name) {
+            res.status(400).json({
+                message: "Branch name is required",
+            });
+        } else if (!req.body.address) {
+            res.status(400).json({
+                message: "Branch address is required",
+            });
+        } else if (!req.body.phone) {
+            res.status(400).json({
+                message: "Branch phone number is required",
+            });
+        } else {
+            const { name, address, phone } = req.body;
+            const newBranch: Branch = await branchServices.createBranch({
+                    name, address, phone
+                });
+                res.status(201).json({
+                    message: "Employee created successfully",
+                    data: newBranch,
+                });
+            }
+        } catch (error: unknown) {
+            next(error);
+        };
+    };

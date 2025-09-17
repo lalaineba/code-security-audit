@@ -24,4 +24,23 @@ export const getBranchByID = async (id: number): Promise<Branch> => {
     };
 
     return structuredClone(branch);
-}
+};
+
+export const createBranch = async (branchData: {
+    name: string;
+    address: string;
+    phone: string;
+}): Promise<Branch> => {
+    // Creating a new branch data with unique generated ID
+    const newBranch: Branch = {
+        id: Number((branches.length) + 1),
+        name: branchData.name,
+        address: branchData.address,
+        phone: branchData.phone,
+    };
+
+    // Adds the new branch to the end of the branch array
+    branches.push(newBranch);
+    
+    return structuredClone(newBranch);
+};

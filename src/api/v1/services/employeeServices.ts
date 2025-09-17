@@ -50,7 +50,7 @@ export const getEmployeeByID = async (id: number): Promise<Employee> => {
     // in the employee array, find an employee id that's equal to the parameter we received
     const employee: Employee | undefined = allEmployees.find((employee: Employee) => employee.id === id);
 
-    // -1 means it didnt find it. There's no index in the array
+    // !employee means no employee with that deisignated ID in the array
     if (!employee) {
         throw new Error(`Employee ID: ${id} not found.`);
     };
@@ -71,18 +71,18 @@ export const updateEmployee = async (
     // From this Employee object, we can only pick position and/or phone
     employeeData: Pick<Employee, "position" | "phone">
 ): Promise<Employee> => {
-    const index: number = employees.findIndex((employee: Employee) => employee.id === id);
+    const employeeIndex: number = employees.findIndex((employee: Employee) => employee.id === id);
 
-    if (index === -1) {
+    if (!employeeIndex) {
         throw new Error(`Employee ID: ${id} not found.`);
     };
 
     // Spread operator: takes each value of the employee and reapply it to the new updated employee
     // Basically merges any existing item (that we didn't update) with the updated data
     // Then create a new instance of that employee item
-    employees[index] = { ...employees[index], ...employeeData };
+    employees[employeeIndex] = { ...employees[employeeIndex], ...employeeData };
 
-    return structuredClone(employees[index]);
+    return structuredClone(employees[employeeIndex]);
 };
 
 /**

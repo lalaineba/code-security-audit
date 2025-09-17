@@ -66,38 +66,38 @@ export const createEmployee = async (
         // Validations to check for the required fields
         // if the rquest body is falsy, respond with a message
         if (!req.body.name) {
-            res.status(404).json({
+            res.status(400).json({
                 message: "Employee name is required",
             });
         } else if (!req.body.position) {
-            res.status(404).json({
+            res.status(400).json({
                 message: "Employee position is required",
             });
         } else if (!req.body.department) {
-            res.status(404).json({
+            res.status(400).json({
                 message: "Employee department is required",
             });
         } else if (!req.body.email) {
-            res.status(404).json({
+            res.status(400).json({
                 message: "Employee email is required",
             });
         } else if (!req.body.phone) {
-            res.status(404).json({
+            res.status(400).json({
                 message: "Employee phone number is required",
             });
         } else if (!req.body.branchId) {
-            res.status(404).json({
+            res.status(400).json({
                 message: "Employee branch ID is required",
             });
-        
-        const { name, position, department, email, phone, branchId } = req.body;
-        const newEmployee: Employee = await employeeServices.createEmployee({
-            name, position, department, email, phone, branchId
-        });
-        res.status(201).json({
-            message: "Employee created successfully",
-            data: newEmployee,
-        });
+        } else {
+            const { name, position, department, email, phone, branchId } = req.body;
+            const newEmployee: Employee = await employeeServices.createEmployee({
+                name, position, department, email, phone, branchId
+            });
+            res.status(201).json({
+                message: "Employee created successfully",
+                data: newEmployee,
+            });
         }
     } catch (error: unknown) {
         next(error);
