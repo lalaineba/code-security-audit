@@ -1,4 +1,3 @@
-import { Employee, employees } from "src/data/employees";
 import { branches } from "../../../data/branches";
 import { Branch } from "../models/models";
 

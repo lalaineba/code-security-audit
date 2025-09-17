@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import morgan from "morgan";
 
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
+import branchRoutes from "./api/v1/routes/branchRoutes";
 
 // initialize the express application
 const app: Express = express();
@@ -42,5 +43,8 @@ app.get("/api/v1/health", (req, res) => {
 
 // Create a prefix for all employee routes
 app.use("/api/v1/employees", employeeRoutes);
+
+// Create a prefix for all branch routes
+app.use("/api/v1/branches", branchRoutes);
 
 export default app;
