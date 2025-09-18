@@ -152,6 +152,12 @@ export const deleteEmployee = async (
     }
 };
 
+/**
+ * Manages requests and responses to retrieve all employees in specified branch ID
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const getAllBranchEmployees = async(
     req: Request,
     res: Response,
@@ -169,6 +175,12 @@ export const getAllBranchEmployees = async(
     }
 };
 
+/**
+ * Manages requests and responses to retrieve all employees in specified department
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const getDepartmentEmployees = async(
     req: Request,
     res: Response,

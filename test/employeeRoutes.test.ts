@@ -106,3 +106,18 @@ describe("Employee Routes", () => {
             expect(employeeControllers.deleteEmployee).not.toHaveBeenCalled();
             });
     });
+
+    // Test successful retrieval of employees in the specified branch ID
+    describe("GET /api/v1/employees/:branchId", () => {
+        it("should return specified employees by branch ID", async () => {
+            const testId: number = 1;
+            await request(app).get(`/api/v1/employees/${testId}`);
+            expect(employeeControllers.getAllBranchEmployees).toHaveBeenCalled();
+        });
+
+    // Test employee by branch ID retrieval with missing ID parameter
+        it("should not get employees if branch ID is missing", async () => {
+            await request(app).get("/api/v1/employees/");
+            expect(employeeControllers.getEmployeeByID).not.toHaveBeenCalled();
+        });
+    });
