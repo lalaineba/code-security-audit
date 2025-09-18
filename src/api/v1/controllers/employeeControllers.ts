@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as employeeServices from "../services/employeeServices";
-import { Employee } from "../models/models";
+import { Employee, BranchEmployees } from "../models/models";
 
 /**
  * Manages requests and responses to retrieve all employees.
@@ -146,6 +146,23 @@ export const deleteEmployee = async (
         await employeeServices.deleteEmployee(id);
         res.status(200).json({
             message: "Employee deleted successfully",
+        });
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+
+export const getAllBranchEmployees = async(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const branchId: number = parseInt(req.params.id);
+        const branchEmployees: Employee[] = await employeeServices.getAllBranchEmployees(branchId);
+         res.status(200).json({
+            message: "Get all employees in specified branch",
+            data: branchEmployees,
         });
     } catch (error: unknown) {
         next(error);

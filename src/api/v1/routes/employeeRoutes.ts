@@ -13,4 +13,11 @@ router.post("/", employeeControllers.createEmployee);
 router.put("/:id", employeeControllers.updateEmployee);
 router.delete("/:id", employeeControllers.deleteEmployee);
 
+/**
+ * Additional endpoints for operations between employees, branches, and departments
+ */
+router.get("/:branchId", employeeControllers.getAllBranchEmployees);
+router.get("/:department", employeeControllers.getDepartmentEmployees);
+
+
 export default router;

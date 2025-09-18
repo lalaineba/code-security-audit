@@ -99,3 +99,17 @@ export const deleteEmployee = async (id: number): Promise<void> => {
     // Splice() removes the employee from the array by deleting the employee at the found index
     employees.splice(index, 1);
 };
+
+
+export const getAllBranchEmployees = async (branchId: number): Promise<Employee[]> => {
+    const allEmployees: Employee[] = await getAllEmployees();
+    // filter() goes through each employee and checks if their branchID is equals to the given branchID
+    // If yes, the employee is added to the new branchEmployees array
+    const branchEmployees: Employee[] = allEmployees.filter((employee: Employee) => employee.branchId === branchId);
+
+    if (!branchEmployees) {
+        throw new Error(`Branch ID: ${branchId} not found.`);
+    };
+
+    return structuredClone(branchEmployees);
+};

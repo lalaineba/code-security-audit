@@ -20,3 +20,14 @@ export interface Branch {
     address: string;
     phone: string;
 }
+
+export interface BranchEmployees {
+    employeeID: number;
+    employeeName: string;
+    branchName: string;
+}
+
+export interface DepartmentEmployees {
+    id: number;
+
+}
