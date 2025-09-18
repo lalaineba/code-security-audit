@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import * as branchServices from "../services/branchServices";
-import { branches } from "../../../data/branches";
 import { Branch } from "../models/models";
 
 /**
@@ -38,7 +37,7 @@ export const getBranchByID = async (
 ): Promise<void> => {
     try {
         const id: number = parseInt(req.params.id); 
-        const branch = await branchServices.getBranchByID(id);
+        const branch: Branch = await branchServices.getBranchByID(id);
          res.status(200).json({
             message: "Get an employee",
             data: branch,

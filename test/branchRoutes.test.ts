@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "../src/app";
 import * as branchControllers from "../src/api/v1/controllers/branchControllers";
-import * as branchServices from "../src/api/v1/services/branchServices";
 
 // Mock this file
 jest.mock("../src/api/v1/controllers/branchControllers", () => ({
@@ -29,7 +28,7 @@ describe("Branch Routes", () => {
     // Test branch by ID successful retrieval
     describe("GET /api/v1/branches/:id", () => {
         it("should return an employee by ID", async () => {
-            const testId = 1;
+            const testId: number = 1;
             await request(app).get(`/api/v1/branches/${testId}`);
             expect(branchControllers.getBranchByID).toHaveBeenCalled();
         });
@@ -44,7 +43,7 @@ describe("Branch Routes", () => {
     // Test successful branch creation
     describe("POST /api/v1/branches/", () => {
         it("should create a new branch", async () => {
-            const mockBranch = {
+            const mockBranch: object = {
                 name: "Test Branch Name",
                 address: "Test Branch Address",
                 phone: "000-000-0000", 
@@ -56,7 +55,7 @@ describe("Branch Routes", () => {
 
     // Test with missing parameters
         it("should fail to create a branch", async () => {
-            const incompleteBranch = {
+            const incompleteBranch: object = {
                 name: "",
                 address: "",
             };
@@ -68,7 +67,7 @@ describe("Branch Routes", () => {
     // Test successful branch update
     describe("PUT /api/v1/branches/:id", () => {
         it("should call updateBranch controller with valid data", async() => {
-            const mockUpdateData = {
+            const mockUpdateData: object = {
                 address: "Updated Address",
                 phone: "Updated Phone",
             };
@@ -79,7 +78,7 @@ describe("Branch Routes", () => {
 
         // Test updateBranch with missing required parameters
         it("should not update branch with missing parameters", async() => {
-            const mockMissingData = {
+            const mockMissingData: object = {
                 address: "",
                 phone: "",
             };

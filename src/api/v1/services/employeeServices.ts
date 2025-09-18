@@ -46,7 +46,7 @@ export const createEmployee = async (employeeData: {
  * @throws An error if employee ID is not found
  */
 export const getEmployeeByID = async (id: number): Promise<Employee> => {
-    let allEmployees = await getAllEmployees(); 
+    const allEmployees: Employee[] = await getAllEmployees(); 
     // in the employee array, find an employee id that's equal to the parameter we received
     const employee: Employee | undefined = allEmployees.find((employee: Employee) => employee.id === id);
 
@@ -70,10 +70,10 @@ export const updateEmployee = async (
     // From this Employee object, we can only pick position and/or phone
     employeeData: Pick<Employee, "position" | "phone">
 ): Promise<Employee> => {
-    // findIncex searches for the index of employee whose ID matches the given ID
+    // findIndex searches for the index of employee whose ID matches the given ID
     const employeeIndex: number = employees.findIndex((employee: Employee) => employee.id === id);
-
-    if (!employeeIndex) {
+    
+    if (employeeIndex === -1) {
         throw new Error(`Employee ID: ${id} not found.`);
     };
 

@@ -1,4 +1,3 @@
-import { Employee } from "src/data/employees";
 import { branches } from "../../../data/branches";
 import { Branch } from "../models/models";
 
@@ -17,7 +16,7 @@ export const getAllBranches = async(): Promise<Branch[]> => {
  * @throws An error if branch ID is not found
  */
 export const getBranchByID = async (id: number): Promise<Branch> => {
-    let allBranches = await getAllBranches();
+    const allBranches: Branch[] = await getAllBranches();
     const branch: Branch | undefined = allBranches.find((branch: Branch) => branch.id === id);
 
     if (!branch) {
@@ -65,9 +64,9 @@ export const updateBranch = async (
 ): Promise<Branch> => {
     const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
 
-    if (!branchIndex) {
-            throw new Error(`Branch ID: ${id} not found.`);
-        };
+    if (branchIndex === -1) {
+        throw new Error(`Branch ID: ${id} not found.`);
+    };
     
     branches[branchIndex] = { ...branches[branchIndex], ...branchData };
     

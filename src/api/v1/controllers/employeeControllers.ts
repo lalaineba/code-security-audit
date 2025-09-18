@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import * as employeeServices from "../services/employeeServices";
-import { employees } from "../../../data/employees";
 import { Employee } from "../models/models";
 
 /**
@@ -41,7 +40,7 @@ export const getEmployeeByID = async (
     try {
         // req.params are always strings by default so we need to convert the id to number
         const id: number = parseInt(req.params.id); 
-        const employee = await employeeServices.getEmployeeByID(id);
+        const employee: Employee = await employeeServices.getEmployeeByID(id);
          res.status(200).json({
             message: "Get an employee",
             data: employee,

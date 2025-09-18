@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "../src/app";
 import * as employeeControllers from "../src/api/v1/controllers/employeeControllers";
-import * as employeeServices from "../src/api/v1/services/employeeServices";
 
 // Mock this file
 jest.mock("../src/api/v1/controllers/employeeControllers", () => ({
@@ -29,7 +28,7 @@ describe("Employee Routes", () => {
     // Test employee by ID successful retrieval
     describe("GET /api/v1/employees/:id", () => {
         it("should return an employee by ID", async () => {
-            const testId = 1;
+            const testId: number = 1;
             await request(app).get(`/api/v1/employees/${testId}`);
             expect(employeeControllers.getEmployeeByID).toHaveBeenCalled();
         });
@@ -44,7 +43,7 @@ describe("Employee Routes", () => {
     // Test successful employee creation
     describe("POST /api/v1/employees/", () => {
         it("should create a new employee", async () => {
-            const mockEmployee = {
+            const mockEmployee: object = {
                 name: "Test Name",
                 position: "Test Position",
                 department: "Test Department",
@@ -59,7 +58,7 @@ describe("Employee Routes", () => {
 
         // Test with missing parameters
         it("should fail to create an employee", async () => {
-            const incompleteEmployee = {
+            const incompleteEmployee: object = {
                 name: "",
                 position: "",
             };
@@ -72,7 +71,7 @@ describe("Employee Routes", () => {
     // Test successful employee update
     describe("PUT /api/v1/employees/:id", () => {
         it("should call updateEmployee controller with valid data", async() => {
-            const mockUpdateData = {
+            const mockUpdateData: object = {
                 position: "Updated Position",
                 phone: "Updated Phone",
             };
@@ -83,7 +82,7 @@ describe("Employee Routes", () => {
 
         // Test employee update with missing required parameters
         it("should not update employee with missing parameters", async() => {
-            const mockMissingData = {
+            const mockMissingData: object = {
                 position: "",
                 phone: "",
             };
