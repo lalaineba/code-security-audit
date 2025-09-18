@@ -1,3 +1,4 @@
+import { Employee } from "src/data/employees";
 import { branches } from "../../../data/branches";
 import { Branch } from "../models/models";
 
@@ -26,6 +27,11 @@ export const getBranchByID = async (id: number): Promise<Branch> => {
     return structuredClone(branch);
 };
 
+/**
+ * Creates a new branch item
+ * @param branchControllers The data for the new branch
+ * @returns The created branch with generated branch ID
+ */
 export const createBranch = async (branchData: {
     name: string;
     address: string;
@@ -43,4 +49,42 @@ export const createBranch = async (branchData: {
     branches.push(newBranch);
     
     return structuredClone(newBranch);
+};
+
+/**
+ * Updates an existing branch
+ * @param id The ID of the branch to update
+ * @param branchData The fields to update (address and/or phone)
+ * @returns The new updated branch data
+ * @throws An error if branch ID is not found
+ */
+export const updateBranch = async (
+    id: number,
+    // From this Branch object, we can only pick address and/or phone
+    branchData: Pick<Branch, "address" | "phone">
+): Promise<Branch> => {
+    const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
+
+    if (!branchIndex) {
+            throw new Error(`Branch ID: ${id} not found.`);
+        };
+    
+    branches[branchIndex] = { ...branches[branchIndex], ...branchData };
+    
+    return structuredClone(branches[branchIndex]);
+};
+
+/**
+ * Deletes a branch from storage
+ * @param id The ID of the branch to delete
+ * @throws An error if branch ID is not found
+ */
+export const deleteBranch = async (id: number): Promise<void> => {
+    const index: number = branches.findIndex((branch: Branch) => branch.id === id);
+
+    if (index === -1) { 
+        throw new Error(`Branch ID: ${id} not found.`);
+    }
+
+    branches.splice(index, 1);
 };

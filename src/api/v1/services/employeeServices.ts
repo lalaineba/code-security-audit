@@ -65,12 +65,12 @@ export const getEmployeeByID = async (id: number): Promise<Employee> => {
  * @returns The new updated employee data
  * @throws An error if employee ID is not found
  */
-
 export const updateEmployee = async (
     id: number,
     // From this Employee object, we can only pick position and/or phone
     employeeData: Pick<Employee, "position" | "phone">
 ): Promise<Employee> => {
+    // findIncex searches for the index of employee whose ID matches the given ID
     const employeeIndex: number = employees.findIndex((employee: Employee) => employee.id === id);
 
     if (!employeeIndex) {
@@ -90,13 +90,12 @@ export const updateEmployee = async (
  * @param id The ID of the employee to delete
  * @throws An error if employee ID is not found
  */
-
 export const deleteEmployee = async (id: number): Promise<void> => {
     const index: number = employees.findIndex((employee: Employee) => employee.id === id);
 
     if (index === -1) { 
         throw new Error(`Employee ID: ${id} not found.`);
     }
-
+    // Splice() removes the employee from the array by deleting the employee at the found index
     employees.splice(index, 1);
 };
