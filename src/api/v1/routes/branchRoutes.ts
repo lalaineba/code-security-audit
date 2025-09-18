@@ -9,6 +9,8 @@ const router: Router = express.Router();
  */
 router.get("/", branchControllers.getAllBranches);
 router.get("/:id", branchControllers.getBranchByID);
-
+router.post("/", branchControllers.createBranch);
+router.put("/:id", branchControllers.updateBranch);
+router.delete("/:id", branchControllers.deleteBranch);
 
 export default router;
