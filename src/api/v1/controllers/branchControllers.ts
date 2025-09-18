@@ -3,6 +3,12 @@ import * as branchServices from "../services/branchServices";
 import { branches } from "../../../data/branches";
 import { Branch } from "../models/models";
 
+/**
+ * Manages requests and responses to retrieve all branches.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const getAllBranches = async (
     req: Request,
     res: Response,
@@ -19,6 +25,12 @@ export const getAllBranches = async (
     }
 };
 
+/**
+ * Manages requests and responses to retrieve a branch item.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const getBranchByID = async (
     req: Request,
     res: Response,
@@ -36,6 +48,12 @@ export const getBranchByID = async (
     }
 };
 
+/**
+ * Manages requests and responses to create a branch.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const createBranch = async (
     req: Request,
     res: Response,
@@ -64,7 +82,56 @@ export const createBranch = async (
                     data: newBranch,
                 });
             }
-        } catch (error: unknown) {
-            next(error);
-        };
-    };
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+
+/**
+ * Manages requests and responses to update a branch
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const updateBranch = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const id: number = parseInt(req.params.id);
+        // Extracting the fields to be updated from the body
+        const { address, phone } = req.body;
+        // Create the update employee object with fields to be updated
+        const updatedBranch: Branch = await branchServices.updateBranch(id, { address, phone });
+        res.status(200).json({
+            message: "Branch updated successfully",
+            data: updatedBranch,
+        });
+    } catch (error: unknown) {
+    next(error);
+    }
+};
+
+/**
+ * Manages requests and responses to delete a branch.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const deleteBranch = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        await branchServices.deleteBranch(id);
+        res.status(200).json({
+            message: "Branch deleted successfully",
+        });
+    } catch (error: unknown) {
+        next(error);
+    }
+};

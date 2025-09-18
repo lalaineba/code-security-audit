@@ -61,7 +61,7 @@ export const getEmployeeByID = async (id: number): Promise<Employee> => {
 /**
  * Updates an existing employee
  * @param id The ID of the employee to update
- * @param employeeData The fields to update (position and phone)
+ * @param employeeData The fields to update (position and/or phone)
  * @returns The new updated employee data
  * @throws An error if employee ID is not found
  */
