@@ -21,6 +21,8 @@ export interface Branch {
     phone: string;
 }
 
+/**
+
 export interface BranchEmployees {
     employeeID: number;
     employeeName: string;
@@ -28,6 +30,9 @@ export interface BranchEmployees {
 }
 
 export interface DepartmentEmployees {
-    id: number;
-
+    employeeID: number;
+    employeeName: string;
+    employeePosition: string;
 }
+    
+ */

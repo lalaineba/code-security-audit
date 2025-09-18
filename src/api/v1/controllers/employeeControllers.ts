@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as employeeServices from "../services/employeeServices";
-import { Employee, BranchEmployees } from "../models/models";
+import { Employee } from "../models/models";
 
 /**
  * Manages requests and responses to retrieve all employees.
@@ -158,11 +158,28 @@ export const getAllBranchEmployees = async(
     next: NextFunction
 ): Promise<void> => {
     try {
-        const branchId: number = parseInt(req.params.id);
+        const branchId: number = parseInt(req.params.branchId);
         const branchEmployees: Employee[] = await employeeServices.getAllBranchEmployees(branchId);
          res.status(200).json({
             message: "Get all employees in specified branch",
             data: branchEmployees,
+        });
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+
+export const getDepartmentEmployees = async(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const department: string = req.params.department;
+        const departmentEmployees: Employee[] = await employeeServices.getDepartmentEmployees(department);
+         res.status(200).json({
+            message: "Get all employees in specified department",
+            data: departmentEmployees,
         });
     } catch (error: unknown) {
         next(error);

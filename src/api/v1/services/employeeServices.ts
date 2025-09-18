@@ -113,3 +113,16 @@ export const getAllBranchEmployees = async (branchId: number): Promise<Employee[
 
     return structuredClone(branchEmployees);
 };
+
+export const getDepartmentEmployees = async (department: string): Promise<Employee[]> => {
+    const allEmployees: Employee[] = await getAllEmployees();
+    // filter() goes through each employee and checks if their branchID is equals to the given branchID
+    // If yes, the employee is added to the new branchEmployees array
+    const departmentEmployees: Employee[] = allEmployees.filter((employee: Employee) => employee.department === department);
+
+    if (!departmentEmployees) {
+        throw new Error(`Department name: ${department} not found.`);
+    };
+
+    return structuredClone(departmentEmployees);
+};
