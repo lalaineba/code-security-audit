@@ -100,13 +100,17 @@ export const deleteEmployee = async (id: number): Promise<void> => {
     employees.splice(index, 1);
 };
 
-
+/**
+ * Gets all employees from the specified branch 
+ * @param id The ID of the branch to retrieve
+ * @throws An error if branch ID is not found
+ */
 export const getAllBranchEmployees = async (branchId: number): Promise<Employee[]> => {
     const allEmployees: Employee[] = await getAllEmployees();
     // filter() goes through each employee and checks if their branchID is equals to the given branchID
     // If yes, the employee is added to the new branchEmployees array
     const branchEmployees: Employee[] = allEmployees.filter((employee: Employee) => employee.branchId === branchId);
-
+    // if the array is empty, it means that branch ID doesn't exist
     if (branchEmployees.length === 0) {
         throw new Error(`Branch ID: ${branchId} not found.`);
     };
@@ -114,13 +118,18 @@ export const getAllBranchEmployees = async (branchId: number): Promise<Employee[
     return structuredClone(branchEmployees);
 };
 
+/**
+ * Gets all employees from the specified department 
+ * @param id The name of the department to retrieve
+ * @throws An error if department is not found
+ */
 export const getDepartmentEmployees = async (department: string): Promise<Employee[]> => {
     const allEmployees: Employee[] = await getAllEmployees();
-    // filter() goes through each employee and checks if their branchID is equals to the given branchID
-    // If yes, the employee is added to the new branchEmployees array
-    const departmentEmployees: Employee[] = allEmployees.filter((employee: Employee) => employee.department === department);
+    const departmentEmployees: Employee[] = allEmployees.filter(
+        (employee: Employee) => employee.department.toLowerCase() === department.toLowerCase()
+    );
 
-    if (!departmentEmployees) {
+    if (departmentEmployees.length === 0) {
         throw new Error(`Department name: ${department} not found.`);
     };
 
