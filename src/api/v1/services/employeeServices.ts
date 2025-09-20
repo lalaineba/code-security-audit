@@ -107,7 +107,7 @@ export const getAllBranchEmployees = async (branchId: number): Promise<Employee[
     // If yes, the employee is added to the new branchEmployees array
     const branchEmployees: Employee[] = allEmployees.filter((employee: Employee) => employee.branchId === branchId);
 
-    if (!branchEmployees) {
+    if (branchEmployees.length === 0) {
         throw new Error(`Branch ID: ${branchId} not found.`);
     };
 

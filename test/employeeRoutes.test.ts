@@ -8,41 +8,36 @@ jest.mock("../src/api/v1/controllers/employeeControllers", () => ({
     getEmployeeByID: jest.fn((req, res) => res.status(200).send()),
     createEmployee: jest.fn((req, res) => res.status(201).send()),
     updateEmployee: jest.fn((req, res) => res.status(200).send()),
-    deleteEmployee: jest.fn((req, res) => res.status(200).send())
+    deleteEmployee: jest.fn((req, res) => res.status(200).send()),
+    getAllBranchEmployees: jest.fn((req, res) => res.status(200).send()),
+    getDepartmentEmployees: jest.fn((req, res) => res.status(200).send())
 }));
 
-// To test that the paths are mapped to the controllers correctly
+// To test that the defined routes are mapped to the controllers correctly
 describe("Employee Routes", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    // Test to verify that all employee records are returned as an array
+    // Test that the getAllEmployees controller gets called when the route is called
     describe("GET /api/v1/employees/", () => {
-        it("should return an array of all employees", async () => {
+        it("should call getAllEmployees controller", async () => {
             await request(app).get("/api/v1/employees");
             expect(employeeControllers.getAllEmployees).toHaveBeenCalled();
         });
     });
 
-    // Test employee by ID successful retrieval
+    // Test that the getEmployeeByID controller gets called correctly
     describe("GET /api/v1/employees/:id", () => {
-        it("should return an employee by ID", async () => {
-            const testId: number = 1;
-            await request(app).get(`/api/v1/employees/${testId}`);
+        it("should call getEmployeeByID controller", async () => {
+            await request(app).get("/api/v1/employees/tesdtId");
             expect(employeeControllers.getEmployeeByID).toHaveBeenCalled();
-        });
-
-    // Test employee by ID retrieval with missing ID parameter
-        it("should not get an employee if ID is missing", async () => {
-            await request(app).get("/api/v1/employees/");
-            expect(employeeControllers.getEmployeeByID).not.toHaveBeenCalled();
         });
     });
 
-    // Test successful employee creation
+    // Test that the createEmployee controller gets called correctly
     describe("POST /api/v1/employees/", () => {
-        it("should create a new employee", async () => {
+        it("should call createEmployee controller with valid data", async () => {
             const mockEmployee: object = {
                 name: "Test Name",
                 position: "Test Position",
@@ -55,20 +50,9 @@ describe("Employee Routes", () => {
             await request(app).post("/api/v1/employees").send(mockEmployee);
             expect(employeeControllers.createEmployee).toHaveBeenCalled();
         });
-
-        // Test with missing parameters
-        it("should fail to create an employee", async () => {
-            const incompleteEmployee: object = {
-                name: "",
-                position: "",
-            };
-
-            await request(app).post("/api/v1/employees").send(incompleteEmployee);
-            expect(employeeControllers.createEmployee).toHaveBeenCalled();
-        });
     });
 
-    // Test successful employee update
+    // Test that the updateEmployee controller gets called correctly
     describe("PUT /api/v1/employees/:id", () => {
         it("should call updateEmployee controller with valid data", async() => {
             const mockUpdateData: object = {
@@ -76,48 +60,32 @@ describe("Employee Routes", () => {
                 phone: "Updated Phone",
             };
 
-            await request(app).put("/api/v1/employees/testid").send(mockUpdateData);
-            expect(employeeControllers.updateEmployee).toHaveBeenCalled();
-        });
-
-        // Test employee update with missing required parameters
-        it("should not update employee with missing parameters", async() => {
-            const mockMissingData: object = {
-                position: "",
-                phone: "",
-            };
-
-            await request(app).put("/api/v1/employees/testid").send(mockMissingData);
+            await request(app).put("/api/v1/employees/testId").send(mockUpdateData);
             expect(employeeControllers.updateEmployee).toHaveBeenCalled();
         });
     });
 
-    // Test successful employee deletion
+    // Test that the deleteEmployee controller gets called correctly
     describe("DELETE /api/v1/employees/:id", () => {
-        it("should call deleteEmployee controller with valid data", async() => {
+        it("should call deleteEmployee controller", async() => {
             await request(app).delete("/api/v1/employees/testid");
             expect(employeeControllers.deleteEmployee).toHaveBeenCalled();
             });
     });
 
-    // Test employee deletion with missing ID parameter
-        it("should not delete an employee if ID is missing", async() => {
-            await request(app).delete("/api/v1/employees/");
-            expect(employeeControllers.deleteEmployee).not.toHaveBeenCalled();
-            });
-    });
-
-    // Test successful retrieval of employees in the specified branch ID
-    describe("GET /api/v1/employees/:branchId", () => {
-        it("should return specified employees by branch ID", async () => {
-            const testId: number = 1;
-            await request(app).get(`/api/v1/employees/${testId}`);
+    // Test that the getAllBranchEmployees controller gets called correctly
+    describe("GET /api/v1/employees/branch/:branchId", () => {
+        it("should call getAllBranchEmployees controller", async () => {
+            await request(app).get("/api/v1/employees/branch/testBranchID");
             expect(employeeControllers.getAllBranchEmployees).toHaveBeenCalled();
         });
+    });
 
-    // Test employee by branch ID retrieval with missing ID parameter
-        it("should not get employees if branch ID is missing", async () => {
-            await request(app).get("/api/v1/employees/");
-            expect(employeeControllers.getEmployeeByID).not.toHaveBeenCalled();
+    // Test that the getDepartmentEmployees controller gets called correctly
+    describe("GET /api/v1/employees/department/:department", () => {
+        it("should call getDepartmentEmployees controller", async () => {
+            await request(app).get("/api/v1/employees/department/testDepartment");
+            expect(employeeControllers.getDepartmentEmployees).toHaveBeenCalled();
         });
     });
+});

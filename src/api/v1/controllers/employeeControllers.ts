@@ -163,17 +163,47 @@ export const getAllBranchEmployees = async(
     res: Response,
     next: NextFunction
 ): Promise<void> => {
+    const branchId: number = parseInt(req.params.branchId);
+    const branchEmployees: Employee[] | undefined = await employeeServices.getAllBranchEmployees(branchId);
+    if (branchEmployees) {
+        res.status(200).json({ message: "Employees by branch ID found", data: branchEmployees });
+    } else {
+        res.status(400).json({ message: "Branch ID not found" });
+    }
+};
+/*
     try {
         const branchId: number = parseInt(req.params.branchId);
         const branchEmployees: Employee[] = await employeeServices.getAllBranchEmployees(branchId);
-         res.status(200).json({
-            message: "Get all employees in specified branch",
-            data: branchEmployees,
-        });
+
+        if (branchEmployees) {
+            res.status(200).json({
+                message: "Get all employees in specified branch",
+                data: branchEmployees,
+            }); 
+        } else if (!branchId) {
+            res.status(400).json({
+                message: "Branch ID is required",
+            });
+        }
     } catch (error: unknown) {
         next(error);
     }
 };
+*/
+
+
+/*
+        if (branchEmployees) {
+            res.status(200).json({
+            message: "Get all employees in specified branch",
+            data: branchEmployees,
+        });           
+        } else {
+            res.status(400).json({ message: "Branch ID not found" });
+        }
+};
+*/
 
 /**
  * Manages requests and responses to retrieve all employees in specified department
