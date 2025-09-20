@@ -192,7 +192,6 @@ export const getAllBranchEmployees = async(
 };
 */
 
-
 /*
         if (branchEmployees) {
             res.status(200).json({

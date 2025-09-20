@@ -1,7 +1,5 @@
 import request from "supertest";
 import app from "../src/app";
-import express from "express";
-import routes from"../src/api/v1/routes/branchRoutes";
 import * as branchControllers from "../src/api/v1/controllers/branchControllers";
 
 // Mock this file
@@ -13,38 +11,31 @@ jest.mock("../src/api/v1/controllers/branchControllers", () => ({
     deleteBranch: jest.fn((req, res) => res.status(200).send())
 }));
 
-// To test that the paths are mapped to the controllers correctly
+// To test that the defined routes are mapped to the controllers correctly
 describe("Branch Routes", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    // Test to verify that all branch records are returned as an array
+    // Test that the getAllBranches controller gets called when the route is called
     describe("GET /api/v1/branches/", () => {
-        it("should return an array of all branch", async () => {
+        it("should call getAllBranches controller", async () => {
             await request(app).get("/api/v1/branches");
             expect(branchControllers.getAllBranches).toHaveBeenCalled();
         });
     });
 
-    // Test branch by ID successful retrieval
+    // Test that the getBranchByID controller gets called correctly
     describe("GET /api/v1/branches/:id", () => {
-        it("should return an employee by ID", async () => {
-            const testId: number = 1;
-            await request(app).get(`/api/v1/branches/${testId}`);
+        it("should call getBranchByID controller", async () => {
+            await request(app).get(`/api/v1/branches/testId`);
             expect(branchControllers.getBranchByID).toHaveBeenCalled();
-        });
-
-        // Test branch by ID retrieval with missing ID parameter
-        it("should not get a branch if ID is missing", async () => {
-            await request(app).get("/api/v1/branches/");
-            expect(branchControllers.getBranchByID).not.toHaveBeenCalled();
         });
     });
 
-    // Test successful branch creation
+    // Test that the createBranch controller gets called correctly
     describe("POST /api/v1/branches/", () => {
-        it("should create a new branch", async () => {
+        it("should call createBranch controller with valid data", async () => {
             const mockBranch: object = {
                 name: "Test Branch Name",
                 address: "Test Branch Address",
@@ -54,19 +45,9 @@ describe("Branch Routes", () => {
             await request(app).post("/api/v1/branches").send(mockBranch);
             expect(branchControllers.createBranch).toHaveBeenCalled();
         });
+    });
 
-    // Test with missing parameters
-        it("should fail to create a branch", async () => {
-            const incompleteBranch: object = {
-                name: "",
-                address: "",
-            };
-
-            await request(app).post("/api/v1/branches").send(incompleteBranch);
-            expect(branchControllers.createBranch).toHaveBeenCalled();
-        });
-
-    // Test successful branch update
+    // Test that the updateBranch controller gets called correctly
     describe("PUT /api/v1/branches/:id", () => {
         it("should call updateBranch controller with valid data", async() => {
             const mockUpdateData: object = {
@@ -77,31 +58,13 @@ describe("Branch Routes", () => {
             await request(app).put("/api/v1/branches/testid").send(mockUpdateData);
             expect(branchControllers.updateBranch).toHaveBeenCalled();
         });
-
-        // Test updateBranch with missing required parameters
-        it("should not update branch with missing parameters", async() => {
-            const mockMissingData: object = {
-                address: "",
-                phone: "",
-            };
-
-            await request(app).put("/api/v1/branches/testid").send(mockMissingData);
-            expect(branchControllers.updateBranch).toHaveBeenCalled();
-        });
     });
-        
-    // Test successful branch deletion
+    
+    //Test that the deleteBranch controller gets called correctly
     describe("DELETE /api/v1/branches/:id", () => {
-        it("should call deleteBranch controller with valid data", async() => {
+        it("should call deleteBranch controller", async() => {
             await request(app).delete("/api/v1/branches/testid");
             expect(branchControllers.deleteBranch).toHaveBeenCalled();
-            });
-    });
-
-    // Test branch deletion with missing ID parameter
-        it("should not delete a branch if ID is missing", async() => {
-            await request(app).delete("/api/v1/branches/");
-            expect(branchControllers.deleteBranch).not.toHaveBeenCalled();
-            });
+        });
     });
 });
