@@ -56,7 +56,7 @@ describe("Branch Controller", () => {
 
         it("should handle getAllBranches errors", async () => {
             // Arrange
-            const mockError = new Error('Test error');
+            const mockError: Error = new Error('Test error');
             (branchServices.getAllBranches as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -106,7 +106,7 @@ describe("Branch Controller", () => {
             mockReq.params = { id: "100" };
             mockReq.body = { name: "Test Name" };
 
-            const mockError = new Error("Branch ID: 100 not found.");
+            const mockError: Error = new Error("Branch ID: 100 not found.");
             (branchServices.getBranchByID as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -176,7 +176,7 @@ describe("Branch Controller", () => {
         it("should handle successful branch update", async () => {
             // Arrange
             mockReq.params = { id: "1" };
-            const mockBody: any = {
+            const mockBody: Partial<Branch> = {
                 address: "Updated Address",
                 phone: "111-111-1111"
             };
@@ -215,7 +215,7 @@ describe("Branch Controller", () => {
             mockReq.params = { id: "100" };
             mockReq.body = { address: "Address", phone: "000-000-0000" };
 
-            const mockError = new Error("Branch ID: 100 not found.");
+            const mockError: Error = new Error("Branch ID: 100 not found.");
             (branchServices.updateBranch as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -257,7 +257,7 @@ describe("Branch Controller", () => {
         it("should handle errors if branch ID is invalid", async () => {
             // Arrange
             mockReq.params = { id: "100" };
-            const mockError = new Error("Branch ID: 100 not found.");
+            const mockError: Error = new Error("Branch ID: 100 not found.");
             (branchServices.deleteBranch as jest.Mock).mockRejectedValue(mockError);
 
             // Act

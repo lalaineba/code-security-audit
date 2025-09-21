@@ -61,7 +61,7 @@ describe("Employee Controller", () => {
         it("should handle getAllEmployees errors", async () => {
             // Arrange
             // To simulate an error in the service
-            const mockError = new Error('Test error');
+            const mockError: Error = new Error('Test error');
             (employeeServices.getAllEmployees as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -114,7 +114,7 @@ describe("Employee Controller", () => {
             mockReq.params = { id: "100" };
             mockReq.body = { name: "Test Name" };
 
-            const mockError = new Error("Employee ID: 100 not found.");
+            const mockError: Error = new Error("Employee ID: 100 not found.");
             (employeeServices.getEmployeeByID as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -187,7 +187,7 @@ describe("Employee Controller", () => {
         it("should handle successful employee update", async () => {
             // Arrange
             mockReq.params = { id: "1" };
-            const mockBody: any = {
+            const mockBody: Partial<Employee> = {
                 position: "Updated Position",
                 phone: "111-111-1111"
             };
@@ -226,7 +226,7 @@ describe("Employee Controller", () => {
             mockReq.params = { id: "100" };
             mockReq.body = { position: "Position", phone: "000-000-0000" };
 
-            const mockError = new Error("Employee ID: 100 not found.");
+            const mockError: Error = new Error("Employee ID: 100 not found.");
             (employeeServices.updateEmployee as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -268,7 +268,7 @@ describe("Employee Controller", () => {
         it("should handle errors if employee ID is invalid", async () => {
             // Arrange
             mockReq.params = { id: "100" };
-            const mockError = new Error("Employee ID: 100 not found.");
+            const mockError: Error = new Error("Employee ID: 100 not found.");
             (employeeServices.deleteEmployee as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -325,7 +325,7 @@ describe("Employee Controller", () => {
             // Arrange
             mockReq.params = { branchId: "100" };
             mockReq.body = { name: "Test Name" };
-            const mockError = new Error("Branch ID: 100 not found.");
+            const mockError: Error = new Error("Branch ID: 100 not found.");
             (employeeServices.getAllBranchEmployees as jest.Mock).mockRejectedValue(mockError);
 
             // Act
@@ -381,7 +381,7 @@ describe("Employee Controller", () => {
         it("should handle error when department parameter is invalid", async () => {
             // Arrange
             mockReq.params = { department: "Invalid Department" };
-            const mockError = new Error("Department name: Invalid Department not found.");
+            const mockError: Error = new Error("Department name: Invalid Department not found.");
             (employeeServices.getDepartmentEmployees as jest.Mock).mockRejectedValue(mockError);
 
             // Act
