@@ -1,88 +1,275 @@
-/*
+import { Request, Response, NextFunction } from "express";
+import { Branch } from "../src/api/v1/models/models";
+import * as branchControllers from "../src/api/v1/controllers/branchControllers";
+import * as branchServices from "../src/api/v1/services/branchServices";
+
+jest.mock("../src/api/v1/services/branchServices");
+
+describe("Branch Controller", () => {
+    // Making every parameter optional
+    let mockReq: Partial<Request>;
+    let mockRes: Partial<Response>;
+    let mockNext: NextFunction;
+
+    // setting up an empty structure for mocks
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockReq = { params: {}, body: {} };
+        mockRes = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        mockNext = jest.fn();
+    });
+
     // Test to verify that all branch records are returned as an array
-    describe("GET /api/v1/branches/", () => {
-        it("should return an array of all branch", async () => {
-            await request(app).get("/api/v1/branches");
-            expect(branchControllers.getAllBranches).toHaveBeenCalled();
+    describe("getAllBranches", () => {
+        it("should handle successful getAllBranches operation", async () => {
+            // Arrange
+            // Defining an instance of what it should return
+            const mockBranches: Branch[] = [
+                {
+                    id: 1,
+                    name: "Test Branch",
+                    address: "Test Address",
+                    phone: "000-000-0000"
+                },
+            ];
+            (branchServices.getAllBranches as jest.Mock).mockReturnValue(mockBranches);
+
+            // Act 
+            await branchControllers.getAllBranches(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            // If the controller runs correctly, it should set the status to 200
+            expect(mockRes.status).toHaveBeenCalledWith(200);
+            // To check if the controller is setting the JSON values correctly
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branches retrieved successfully",
+                data: mockBranches,
+            });
+        });
+
+        it("should handle getAllBranches errors", async () => {
+            // Arrange
+            const mockError = new Error('Test error');
+            (branchServices.getAllBranches as jest.Mock).mockRejectedValue(mockError);
+
+            // Act
+            await branchControllers.getAllBranches(
+                mockReq as Request, 
+                mockRes as Response, 
+                mockNext);
+
+            // Assert
+            expect(mockNext).toHaveBeenCalledWith(mockError);
         });
     });
 
-    // Test branch by ID successful retrieval
-    describe("GET /api/v1/branches/:id", () => {
-        it("should return an employee by ID", async () => {
-            const testId: number = 1;
-            await request(app).get(`/api/v1/branches/${testId}`);
-            expect(branchControllers.getBranchByID).toHaveBeenCalled();
+    // Test successful branch retrieval by branch ID
+    describe("getBranchByID", () => {
+        it("should handle successful branch retrieval", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+
+            // Defining an instance of what it should return
+            const mockBranch: Branch = {
+                id: 1,
+                name: "Test Name",
+                address:"Test Address",
+                phone: "000-000-0000"
+            };
+            (branchServices.getBranchByID as jest.Mock).mockReturnValue(mockBranch);
+
+            // Act 
+            await branchControllers.getBranchByID(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(200);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branch retrieved",
+                data: mockBranch,
+            });
         });
 
-        // Test branch by ID retrieval with missing ID parameter
-        it("should not get a branch if ID is missing", async () => {
-            await request(app).get("/api/v1/branches/");
-            expect(branchControllers.getBranchByID).not.toHaveBeenCalled();
-        });
-    });
+        // Test with an invalid branch ID
+        it("should handle error when branch ID is invalid", async () => {
+            // Arrange
+            mockReq.params = { id: "100" };
+            mockReq.body = { name: "Test Name" };
 
+            const mockError = new Error("Branch ID: 100 not found.");
+            (branchServices.getBranchByID as jest.Mock).mockRejectedValue(mockError);
+
+            // Act
+            await branchControllers.getBranchByID(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockNext).toHaveBeenCalledWith(mockError);
+            });
+        });
+        
     // Test successful branch creation
-    describe("POST /api/v1/branches/", () => {
-        it("should create a new branch", async () => {
-            const mockBranch: object = {
-                name: "Test Branch Name",
-                address: "Test Branch Address",
-                phone: "000-000-0000", 
+    describe("createBranch", () => {
+        it("should handle successful branch creation", async () => {
+            // Arrange
+            const mockBody: object = {
+                name: "Test Name",
+                address: "Test Address",
+                phone: "000-000-0000",
             };
 
-            await request(app).post("/api/v1/branches").send(mockBranch);
-            expect(branchControllers.createBranch).toHaveBeenCalled();
+            const mockBranch: Partial<Branch> = { id: 1, ...mockBody };
+
+            mockReq.body = mockBody;
+            (branchServices.createBranch as jest.Mock).mockReturnValue(mockBranch);
+
+            // Act
+            await branchControllers.createBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(201);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branch created successfully",
+                data: mockBranch,
+            });
         });
 
-    // Test with missing parameters
-        it("should fail to create a branch", async () => {
-            const incompleteBranch: object = {
-                name: "",
-                address: "",
-            };
+        // Test with a missing parameter
+        it("should return 400 when branch name is missing", async () => {
+            // Arrange
+            mockReq.body = { address: "Test Address" };
 
-            await request(app).post("/api/v1/branches").send(incompleteBranch);
-            expect(branchControllers.createBranch).toHaveBeenCalled();
+            // Act
+            await branchControllers.createBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(400);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branch name is required",
+            });
         });
+    });
 
     // Test successful branch update
-    describe("PUT /api/v1/branches/:id", () => {
-        it("should call updateBranch controller with valid data", async() => {
-            const mockUpdateData: object = {
+    describe("updateBranch", () => {
+        it("should handle successful branch update", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            const mockBody: any = {
                 address: "Updated Address",
-                phone: "Updated Phone",
+                phone: "111-111-1111"
+            };
+            mockReq.body = mockBody;
+
+            const mockUpdate: Partial<Branch> = { 
+                id: 1,
+                address: mockBody.address, 
+                phone: mockBody.phone,
             };
 
-            await request(app).put("/api/v1/branches/testid").send(mockUpdateData);
-            expect(branchControllers.updateBranch).toHaveBeenCalled();
+            (branchServices.updateBranch as jest.Mock).mockResolvedValue(mockUpdate);
+
+            // Act
+            await branchControllers.updateBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(branchServices.updateBranch).toHaveBeenCalledWith(1, {
+                address: mockBody.address,
+                phone: mockBody.phone,
+            });
+            expect(mockRes.status).toHaveBeenCalledWith(200);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branch updated successfully",
+                data: mockUpdate,
+            });
         });
 
-        // Test updateBranch with missing required parameters
-        it("should not update branch with missing parameters", async() => {
-            const mockMissingData: object = {
-                address: "",
-                phone: "",
-            };
+        // Test with a missing required parameter
+        it("should handle errors if branch ID is invalid", async () => {
+            // Arrange
+            mockReq.params = { id: "100" };
+            mockReq.body = { address: "Address", phone: "000-000-0000" };
 
-            await request(app).put("/api/v1/branches/testid").send(mockMissingData);
-            expect(branchControllers.updateBranch).toHaveBeenCalled();
+            const mockError = new Error("Branch ID: 100 not found.");
+            (branchServices.updateBranch as jest.Mock).mockRejectedValue(mockError);
+
+            // Act
+            await branchControllers.updateBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockNext).toHaveBeenCalledWith(mockError);
+            });
         });
-    });
-        
+
     // Test successful branch deletion
-    describe("DELETE /api/v1/branches/:id", () => {
-        it("should call deleteBranch controller with valid data", async() => {
-            await request(app).delete("/api/v1/branches/testid");
-            expect(branchControllers.deleteBranch).toHaveBeenCalled();
-            });
-    });
+    describe("deleteBranch", () => {
+        it("should handle successful branch deletion", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            // undefined because there is nothing to return
+            (branchServices.deleteBranch as jest.Mock).mockResolvedValue(undefined);
 
-    // Test branch deletion with missing ID parameter
-        it("should not delete a branch if ID is missing", async() => {
-            await request(app).delete("/api/v1/branches/");
-            expect(branchControllers.deleteBranch).not.toHaveBeenCalled();
+            // Act
+            await branchControllers.deleteBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(branchServices.deleteBranch).toHaveBeenCalledWith(1);
+            expect(mockRes.status).toHaveBeenCalledWith(200);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branch deleted successfully"
             });
+        });
+
+        // Test with an invalid branch ID
+        it("should handle errors if branch ID is invalid", async () => {
+            // Arrange
+            mockReq.params = { id: "100" };
+            const mockError = new Error("Branch ID: 100 not found.");
+            (branchServices.deleteBranch as jest.Mock).mockRejectedValue(mockError);
+
+            // Act
+            await branchControllers.deleteBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(branchServices.deleteBranch).toHaveBeenCalledWith(100);
+            expect(mockNext).toHaveBeenCalledWith(mockError);
+        });
     });
 });
-*/

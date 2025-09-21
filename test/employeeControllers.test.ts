@@ -5,7 +5,7 @@ import * as employeeServices from "../src/api/v1/services/employeeServices";
 
 jest.mock("../src/api/v1/services/employeeServices");
 
-describe("Item Controller", () => {
+describe("Employee Controller", () => {
     // Making every parameter optional
     let mockReq: Partial<Request>;
     let mockRes: Partial<Response>;
@@ -57,8 +57,10 @@ describe("Item Controller", () => {
             });
         });
 
+        // Test when the service fails, the controller handles the error properly
         it("should handle getAllEmployees errors", async () => {
             // Arrange
+            // To simulate an error in the service
             const mockError = new Error('Test error');
             (employeeServices.getAllEmployees as jest.Mock).mockRejectedValue(mockError);
 

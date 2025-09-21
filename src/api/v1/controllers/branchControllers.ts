@@ -39,7 +39,7 @@ export const getBranchByID = async (
         const id: number = parseInt(req.params.id); 
         const branch: Branch = await branchServices.getBranchByID(id);
          res.status(200).json({
-            message: "Get an employee",
+            message: "Branch retrieved",
             data: branch,
         });
     } catch (error: unknown) {
@@ -77,7 +77,7 @@ export const createBranch = async (
                     name, address, phone
                 });
                 res.status(201).json({
-                    message: "Employee created successfully",
+                    message: "Branch created successfully",
                     data: newBranch,
                 });
             }
@@ -101,7 +101,7 @@ export const updateBranch = async (
         const id: number = parseInt(req.params.id);
         // Extracting the fields to be updated from the body
         const { address, phone } = req.body;
-        // Create the update employee object with fields to be updated
+        // Create the update branch object with fields to be updated
         const updatedBranch: Branch = await branchServices.updateBranch(id, { address, phone });
         res.status(200).json({
             message: "Branch updated successfully",
