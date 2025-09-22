@@ -341,7 +341,7 @@ describe("Employee Controller", () => {
         });
     });
         
-        // Test successful employees by department retrieval
+    // Test successful employees by department retrieval
     describe("getDepartmentEmployees", () => {
         it("should handle successful getDepartmentEmployees operation", async () => {
             // Arrange

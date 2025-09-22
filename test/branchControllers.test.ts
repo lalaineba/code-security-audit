@@ -54,6 +54,7 @@ describe("Branch Controller", () => {
             });
         });
 
+        // Test when the service fails, the controller handles the error properly
         it("should handle getAllBranches errors", async () => {
             // Arrange
             const mockError: Error = new Error('Test error');
