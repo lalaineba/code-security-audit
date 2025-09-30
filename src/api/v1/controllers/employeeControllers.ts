@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as employeeServices from "../services/employeeServices";
 import { Employee } from "../models/models";
+import { successResponse } from "../models/responseModels";
 
 /**
  * Manages requests and responses to retrieve all employees.
@@ -17,10 +18,9 @@ export const getAllEmployees = async (
         // await pauses the execution of the async functions in the employeeServices
         // until the Promise is resolved, so we get the actual employees array before sending the response
         const employees: Employee[] = await employeeServices.getAllEmployees();
-        res.status(200).json({ 
-            message: "Employees retrieved successfully", 
-            data: employees,
-        });
+        res.status(200).json( 
+            successResponse(employees, "Employees retrieved successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -41,10 +41,9 @@ export const getEmployeeByID = async (
         // req.params are always strings by default so we need to convert the id to number
         const id: number = parseInt(req.params.id); 
         const employee: Employee = await employeeServices.getEmployeeByID(id);
-         res.status(200).json({
-            message: "Get an employee",
-            data: employee,
-        });
+        res.status(200).json(
+            successResponse(employee, "Get an employee")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -62,42 +61,13 @@ export const createEmployee = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        // Validations to check for the required fields
-        // if the rquest body is falsy, respond with a message
-        if (!req.body.name) {
-            res.status(400).json({
-                message: "Employee name is required",
-            });
-        } else if (!req.body.position) {
-            res.status(400).json({
-                message: "Employee position is required",
-            });
-        } else if (!req.body.department) {
-            res.status(400).json({
-                message: "Employee department is required",
-            });
-        } else if (!req.body.email) {
-            res.status(400).json({
-                message: "Employee email is required",
-            });
-        } else if (!req.body.phone) {
-            res.status(400).json({
-                message: "Employee phone number is required",
-            });
-        } else if (!req.body.branchId) {
-            res.status(400).json({
-                message: "Employee branch ID is required",
-            });
-        } else {
-            const { name, position, department, email, phone, branchId } = req.body;
-            const newEmployee: Employee = await employeeServices.createEmployee({
-                name, position, department, email, phone, branchId
-            });
-            res.status(201).json({
-                message: "Employee created successfully",
-                data: newEmployee,
-            });
-        }
+        const { name, position, department, email, phone, branchId } = req.body;
+        const newEmployee: Employee = await employeeServices.createEmployee({
+            name, position, department, email, phone, branchId
+        });
+        res.status(201).json(
+            successResponse(newEmployee, "Employee created successfully")
+        );
     } catch (error: unknown) {
         next(error);
     };
