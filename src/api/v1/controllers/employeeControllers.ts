@@ -89,7 +89,11 @@ export const updateEmployee = async (
         // Extracting the fields to be updated from the body
         const { position, phone } = req.body;
         // Create the update employee object with fields to be updated
-        const updatedEmployee: Employee = await employeeServices.updateEmployee(id, { position, phone });
+        const updatedEmployee: Employee = await employeeServices.updateEmployee(id, { 
+            position,
+            phone,
+        });
+        
         res.status(200).json(
             successResponse(updatedEmployee, "Employee updated successfully")
         );
