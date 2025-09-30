@@ -86,13 +86,16 @@ export const updateBranch = async (
         // Extracting the fields to be updated from the body
         const { address, phone } = req.body;
         // Create the update branch object with fields to be updated
-        const updatedBranch: Branch = await branchServices.updateBranch(id, { address, phone });
-        res.status(200).json({
-            message: "Branch updated successfully",
-            data: updatedBranch,
+        const updatedBranch: Branch = await branchServices.updateBranch(id, { 
+            address,
+            phone
         });
+
+        res.status(200).json(
+            successResponse(updatedBranch, "Branch updated successfully")
+        );
     } catch (error: unknown) {
-    next(error);
+        next(error);
     }
 };
 
@@ -111,9 +114,9 @@ export const deleteBranch = async (
         const id: number = parseInt(req.params.id);
 
         await branchServices.deleteBranch(id);
-        res.status(200).json({
-            message: "Branch deleted successfully",
-        });
+        res.status(200).json(
+            successResponse("Branch deleted successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
