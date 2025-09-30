@@ -90,10 +90,9 @@ export const updateEmployee = async (
         const { position, phone } = req.body;
         // Create the update employee object with fields to be updated
         const updatedEmployee: Employee = await employeeServices.updateEmployee(id, { position, phone });
-        res.status(200).json({
-            message: "Employee updated successfully",
-            data: updatedEmployee,
-        });
+        res.status(200).json(
+            successResponse(updatedEmployee, "Employee updated successfully")
+        );
     } catch (error: unknown) {
     next(error);
     }
@@ -114,9 +113,9 @@ export const deleteEmployee = async (
         const id: number = parseInt(req.params.id);
 
         await employeeServices.deleteEmployee(id);
-        res.status(200).json({
-            message: "Employee deleted successfully",
-        });
+        res.status(200).json(
+            successResponse("Employee deleted successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -136,10 +135,9 @@ export const getAllBranchEmployees = async (
     try {
         const branchId: number = parseInt(req.params.branchId);
         const branchEmployees: Employee[] = await employeeServices.getAllBranchEmployees(branchId);
-        res.status(200).json({
-            message: "Employees in specified branch retrieved",
-            data: branchEmployees,
-        }); 
+        res.status(200).json(
+            successResponse(branchEmployees, "Employees in specified branch retrieved")
+        ); 
     } catch (error: unknown) {
         next(error);
     }
@@ -159,10 +157,9 @@ export const getDepartmentEmployees = async (
     try {
         const department: string = req.params.department;
         const departmentEmployees: Employee[] = await employeeServices.getDepartmentEmployees(department);
-        res.status(200).json({
-            message: "Employees in specified department retrieved",
-            data: departmentEmployees,
-        }); 
+        res.status(200).json(
+            successResponse(departmentEmployees, "Employees in specified department retrieved")
+        ); 
     } catch (error: unknown) {
         next(error);
     }
