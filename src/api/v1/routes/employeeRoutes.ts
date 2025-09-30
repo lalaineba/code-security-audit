@@ -1,5 +1,7 @@
 import express, { Router } from "express";
 import * as employeeControllers from "../controllers/employeeControllers";
+import { validateRequest } from "../middleware/validate";
+import { employeeSchemas } from "../validations/employeeValidations";
 
 
 const router: Router = express.Router();
@@ -9,9 +11,21 @@ const router: Router = express.Router();
  */
 router.get("/", employeeControllers.getAllEmployees);
 router.get("/:id", employeeControllers.getEmployeeByID);
-router.post("/", employeeControllers.createEmployee);
-router.put("/:id", employeeControllers.updateEmployee);
-router.delete("/:id", employeeControllers.deleteEmployee);
+
+router.post(
+    "/",
+    validateRequest(employeeSchemas.create),
+    employeeControllers.createEmployee
+);
+router.put(
+    "/:id",
+    validateRequest(employeeSchemas.update),
+    employeeControllers.updateEmployee
+);
+router.delete(
+    "/:id",
+    validateRequest(employeeSchemas.delete),
+    employeeControllers.deleteEmployee);
 
 /**
  * Additional endpoints for operations between employees, branches, and departments
