@@ -69,4 +69,58 @@ describe("Validation Middleware", () => {
             error: "Validation error: Body: Employee name cannot be empty",
         });
     });
+
+    // TEST
+
+    // Test to verify it rejects when body is missing for updating an employee
+    it("should fail for missing body input", () => {
+        // Arrange
+        // Position is an empty string
+        mockReq.body = { postion: "", phone: "000-000-0000" };
+        const middleware = validateRequest(employeeSchemas.update);
+
+        // Act
+        middleware(mockReq as Request, mockRes as Response, mockNext);
+
+        // Assert
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: expect.stringContaining("Position cannot be empty"),
+        });
+        expect(mockNext).not.toHaveBeenCalled();
+    });
+
+    // Test to verify it correctly validates required params for deleting an employee
+    it("should validate ID parameter correctly", () => {
+        // Arrange
+        mockReq.params = { id: "1" };
+        const middleware: MiddlewareFunction = validateRequest(
+            employeeSchemas.delete
+        );
+
+        // Act
+        middleware(mockReq as Request, mockRes as Response, mockNext);
+
+        // Assert
+        expect(mockNext).toHaveBeenCalled();
+    });
+
+    // Test to verify it rejects when Employee ID is missing
+    it("should fail when required ID parameter is missing", () => {
+        // Arrange
+        // Missing required id
+        mockReq.params = {};
+        const middleware: MiddlewareFunction = validateRequest(
+            employeeSchemas.delete
+        );
+
+        // Act
+        middleware(mockReq as Request, mockRes as Response, mockNext);
+
+        // Assert
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: expect.stringContaining('Params: Employee ID is required'),
+        });
+    });
 });
