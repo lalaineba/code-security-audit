@@ -70,13 +70,28 @@ describe("Validation Middleware", () => {
         });
     });
 
-    // TEST
+    // Test to verify it correctly validates data for updating an employee
+    it("should pass for valid body input for updating an employee", () => {
+        // Arrange
+        mockReq.params = { id: "1" };
+        mockReq.body = { postion: "Update Position", phone: "000-000-0000" };
+        const middleware = validateRequest(employeeSchemas.update);
+
+        // Act
+        middleware(mockReq as Request, mockRes as Response, mockNext);
+
+        // Assert
+        expect(mockNext).toHaveBeenCalled();
+        expect(mockRes.status).not.toHaveBeenCalled();
+        expect(mockRes.json).not.toHaveBeenCalled();
+    });
 
     // Test to verify it rejects when body is missing for updating an employee
-    it("should fail for missing body input", () => {
+    it("should fail for missing body input for updating an employee", () => {
         // Arrange
         // Position is an empty string
-        mockReq.body = { postion: "", phone: "000-000-0000" };
+        mockReq.params = { id: "1" };
+        mockReq.body = { position: "", phone: "000-000-0000" };
         const middleware = validateRequest(employeeSchemas.update);
 
         // Act
