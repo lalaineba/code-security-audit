@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validateRequest } from "../src/api/v1/middleware/validate";
-import { employeeSchemas } from "../src/api/v1/validations/employeeValidations";
+import { branchSchemas } from "../src/api/v1/validations/branchesValidations";
 import { MiddlewareFunction } from "../src/api/v1/types/express";
 
 describe("Validation Middleware", () => {
@@ -21,19 +21,16 @@ describe("Validation Middleware", () => {
         mockNext = jest.fn();
     });
 
-    // Test to verify it correctly validates data for creating new employee
-    it("should pass validation for valid employee data", () => {
+    // Test to verify it correctly validates data for creating new branch
+    it("should pass validation for valid branch data", () => {
         // Arrange
         mockReq.body = {
             name: "Valid Name",         
-            position: "Valid Position",
-            department: "Valid Department",
-            email: "valid_email@test.com",
-            phone: "000-000-0000",
-            branchId: 1
+            address: "Valid Address",
+            phone: "000-000-0000"
         };
         const middleware: MiddlewareFunction = validateRequest(
-            employeeSchemas.create
+            branchSchemas.create
         );
 
         // Act
@@ -44,19 +41,16 @@ describe("Validation Middleware", () => {
         expect(mockRes.status).not.toHaveBeenCalled();
     });
 
-    // Test to verify it rejects missing input when creating new employee
-    it("should fail validation when employee name is empty", () => {
+    // Test to verify it rejects missing input when creating new branch
+    it("should fail validation when branch name is empty", () => {
         // Arrange
         mockReq.body = {
             name: "",
-            position: "Valid Position",
-            department: "Valid Department",
-            email: "valid_email@test.com",
-            phone: "000-000-0000",
-            branchId: 1
+            address: "Valid Address",
+            phone: "000-000-0000"
         };
         const middleware: MiddlewareFunction = validateRequest(
-            employeeSchemas.create
+            branchSchemas.create
         );
 
         // Act
@@ -66,16 +60,16 @@ describe("Validation Middleware", () => {
         expect(mockNext).not.toHaveBeenCalled();
         expect(mockRes.status).toHaveBeenCalledWith(400);
         expect(mockRes.json).toHaveBeenCalledWith({
-            error: "Validation error: Body: Employee name cannot be empty",
+            error: "Validation error: Body: Branch name cannot be empty",
         });
     });
 
-    // Test to verify it correctly validates data for updating an employee
-    it("should pass for valid body input for updating an employee", () => {
+    // Test to verify it correctly validates data for updating a branch
+    it("should pass for valid body input for updating a branch", () => {
         // Arrange
         mockReq.params = { id: "1" };
-        mockReq.body = { postion: "Update Position", phone: "111-000-0000" };
-        const middleware = validateRequest(employeeSchemas.update);
+        mockReq.body = { address: "Update Address", phone: "111-000-0000" };
+        const middleware = validateRequest(branchSchemas.update);
 
         // Act
         middleware(mockReq as Request, mockRes as Response, mockNext);
@@ -86,13 +80,13 @@ describe("Validation Middleware", () => {
         expect(mockRes.json).not.toHaveBeenCalled();
     });
 
-    // Test to verify it rejects when body is missing for updating an employee
-    it("should fail for missing body input for updating an employee", () => {
+    // Test to verify it rejects when body is missing for updating a branch
+    it("should fail for missing body input for updating a branch", () => {
         // Arrange
-        // Position is an empty string
+        // Address is an empty string
         mockReq.params = { id: "1" };
-        mockReq.body = { position: "", phone: "000-000-0000" };
-        const middleware = validateRequest(employeeSchemas.update);
+        mockReq.body = { address: "", phone: "000-000-0000" };
+        const middleware = validateRequest(branchSchemas.update);
 
         // Act
         middleware(mockReq as Request, mockRes as Response, mockNext);
@@ -100,17 +94,17 @@ describe("Validation Middleware", () => {
         // Assert
         expect(mockRes.status).toHaveBeenCalledWith(400);
         expect(mockRes.json).toHaveBeenCalledWith({
-            error: expect.stringContaining("Position cannot be empty"),
+            error: expect.stringContaining("Address cannot be empty"),
         });
         expect(mockNext).not.toHaveBeenCalled();
     });
 
-    // Test to verify it correctly validates required params for deleting an employee
+    // Test to verify it correctly validates required params for deleting an branch
     it("should validate ID parameter correctly", () => {
         // Arrange
         mockReq.params = { id: "1" };
         const middleware: MiddlewareFunction = validateRequest(
-            employeeSchemas.delete
+            branchSchemas.delete
         );
 
         // Act
@@ -120,13 +114,13 @@ describe("Validation Middleware", () => {
         expect(mockNext).toHaveBeenCalled();
     });
 
-    // Test to verify it rejects when Employee ID is missing
+    // Test to verify it rejects when branch ID is missing
     it("should fail when required ID parameter is missing", () => {
         // Arrange
         // Missing required id
         mockReq.params = {};
         const middleware: MiddlewareFunction = validateRequest(
-            employeeSchemas.delete
+            branchSchemas.delete
         );
 
         // Act
@@ -135,7 +129,7 @@ describe("Validation Middleware", () => {
         // Assert
         expect(mockRes.status).toHaveBeenCalledWith(400);
         expect(mockRes.json).toHaveBeenCalledWith({
-            error: expect.stringContaining('Params: Employee ID is required'),
+            error: expect.stringContaining('Params: Branch ID is required'),
         });
     });
 });
