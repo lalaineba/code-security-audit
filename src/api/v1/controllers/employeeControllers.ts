@@ -93,12 +93,12 @@ export const updateEmployee = async (
             position,
             phone,
         });
-        
+
         res.status(200).json(
             successResponse(updatedEmployee, "Employee updated successfully")
         );
     } catch (error: unknown) {
-    next(error);
+        next(error);
     }
 };
 
