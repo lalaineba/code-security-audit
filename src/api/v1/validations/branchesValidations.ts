@@ -40,7 +40,7 @@ export const branchSchemas = {
         }),
     },
 
-    // DELETE /api/v1/branches/:id - Delete an Branch
+    // DELETE /api/v1/branches/:id - Delete a Branch
     delete: {
         params: Joi.object({
             id: Joi.string().required().messages({
@@ -49,5 +49,4 @@ export const branchSchemas = {
             }),
         }),
     },
-
 }
