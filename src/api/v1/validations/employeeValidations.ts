@@ -8,8 +8,8 @@ export const employeeSchemas = {
     create: {
         body: Joi.object({
             name: Joi.string().required().messages({
-                "any.required": "Name is required",
-                "string.empty": "Name cannot be empty",
+                "any.required": "Employee name is required",
+                "string.empty": "Employee name cannot be empty",
             }),
             position: Joi.string().required().messages({
                 "any.required": "Position is required",
