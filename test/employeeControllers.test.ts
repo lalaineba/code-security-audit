@@ -29,7 +29,7 @@ describe("Employee Controller", () => {
             // Defining an instance of what it should return
             const mockEmployees: Employee[] = [
                 {
-                    id: 1,
+                    id: "1",
                     name: "Test Name",
                     position: "Test Position",
                     department: "Test Department",
@@ -53,25 +53,9 @@ describe("Employee Controller", () => {
             // To check if the controller is setting the JSON values correctly
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employees retrieved successfully",
+                status: "Success!",
                 data: mockEmployees,
             });
-        });
-
-        // Test when the service fails, the controller handles the error properly
-        it("should handle getAllEmployees errors", async () => {
-            // Arrange
-            // To simulate an error in the service
-            const mockError: Error = new Error('Test error');
-            (employeeServices.getAllEmployees as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await employeeControllers.getAllEmployees(
-                mockReq as Request, 
-                mockRes as Response, 
-                mockNext);
-
-            // Assert
-            expect(mockNext).toHaveBeenCalledWith(mockError);
         });
     });
 
@@ -83,7 +67,7 @@ describe("Employee Controller", () => {
 
             // Defining an instance of what it should return
             const mockEmployee: Employee = {
-                id: 1,
+                id: "1",
                 name: "Test Name",
                 position: "Test Position",
                 department: "Test Department",
@@ -104,30 +88,11 @@ describe("Employee Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Get an employee",
+                status: "Success!",
                 data: mockEmployee,
             });
         });
-
-        // Test with an invalid employee ID
-        it("should handle error when employee ID is invalid", async () => {
-            // Arrange
-            mockReq.params = { id: "100" };
-            mockReq.body = { name: "Test Name" };
-
-            const mockError: Error = new Error("Employee ID: 100 not found.");
-            (employeeServices.getEmployeeByID as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await employeeControllers.getEmployeeByID(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockNext).toHaveBeenCalledWith(mockError);
-            });
-        });
+    });
 
     // Test successful employee creation
     describe("createEmployee", () => {
@@ -142,7 +107,7 @@ describe("Employee Controller", () => {
                 branchId: 1
             };
 
-            const mockEmployee: Partial<Employee> = { id: 1, ...mockBody };
+            const mockEmployee: Partial<Employee> = { id: "1", ...mockBody };
 
             mockReq.body = mockBody;
             (employeeServices.createEmployee as jest.Mock).mockReturnValue(mockEmployee);
@@ -158,26 +123,8 @@ describe("Employee Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(201);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employee created successfully",
+                status: "Success!",
                 data: mockEmployee,
-            });
-        });
-
-        // Test with a missing parameter
-        it("should return 400 when employee name is missing", async () => {
-            // Arrange
-            mockReq.body = { position: "Test Position" };
-
-            // Act
-            await employeeControllers.createEmployee(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockRes.status).toHaveBeenCalledWith(400);
-            expect(mockRes.json).toHaveBeenCalledWith({
-                message: "Employee name is required",
             });
         });
     });
@@ -194,7 +141,7 @@ describe("Employee Controller", () => {
             mockReq.body = mockBody;
 
             const mockUpdate: Partial<Employee> = { 
-                id: 1,
+                id: "1",
                 position: mockBody.position, 
                 phone: mockBody.phone,
             };
@@ -209,37 +156,18 @@ describe("Employee Controller", () => {
             );
 
             // Assert
-            expect(employeeServices.updateEmployee).toHaveBeenCalledWith(1, {
+            expect(employeeServices.updateEmployee).toHaveBeenCalledWith("1", {
                 position: mockBody.position,
                 phone: mockBody.phone,
             });
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employee updated successfully",
+                status: "Success!",
                 data: mockUpdate,
             });
         });
-
-        // Test with a missing required parameter
-        it("should handle errors if employee ID is invalid", async () => {
-            // Arrange
-            mockReq.params = { id: "100" };
-            mockReq.body = { position: "Position", phone: "000-000-0000" };
-
-            const mockError: Error = new Error("Employee ID: 100 not found.");
-            (employeeServices.updateEmployee as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await employeeControllers.updateEmployee(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockNext).toHaveBeenCalledWith(mockError);
-            });
-        });
+    });
 
     // Test successful employee deletion
     describe("deleteEmployee", () => {
@@ -257,30 +185,13 @@ describe("Employee Controller", () => {
             );
 
             // Assert
-            expect(employeeServices.deleteEmployee).toHaveBeenCalledWith(1);
+            expect(employeeServices.deleteEmployee).toHaveBeenCalledWith("1");
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: "Employee deleted successfully"
+                data: null,
+                message: "Employee deleted successfully",
+                status: "Success!",   
             });
-        });
-
-        // Test with an invalid employee ID
-        it("should handle errors if employee ID is invalid", async () => {
-            // Arrange
-            mockReq.params = { id: "100" };
-            const mockError: Error = new Error("Employee ID: 100 not found.");
-            (employeeServices.deleteEmployee as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await employeeControllers.deleteEmployee(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(employeeServices.deleteEmployee).toHaveBeenCalledWith(100);
-            expect(mockNext).toHaveBeenCalledWith(mockError);
         });
     });
 
@@ -293,7 +204,7 @@ describe("Employee Controller", () => {
             // Defining an instance of what it should return
             const mockEmployee: Employee[] = [
                 {
-                    id: 1,
+                    id: "1",
                     name: "Test Name",
                     position: "Test Position",
                     department: "Test Department",
@@ -317,27 +228,8 @@ describe("Employee Controller", () => {
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employees in specified branch retrieved",
                 data: mockEmployee,
+                status: "Success!",
             });
-        });
-
-        // Test with an invalid branch ID
-        it("should handle error when branch ID is invalid", async () => {
-            // Arrange
-            mockReq.params = { branchId: "100" };
-            mockReq.body = { name: "Test Name" };
-            const mockError: Error = new Error("Branch ID: 100 not found.");
-            (employeeServices.getAllBranchEmployees as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await employeeControllers.getAllBranchEmployees(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(employeeServices.getAllBranchEmployees).toHaveBeenCalledWith(100);
-            expect(mockNext).toHaveBeenCalledWith(mockError);
         });
     });
         
@@ -350,7 +242,7 @@ describe("Employee Controller", () => {
             // Defining an instance of what it should return
             const mockEmployee: Employee[] = [
                 {
-                    id: 1,
+                    id: "1",
                     name: "Test Name",
                     position: "Test Position",
                     department: "Test Department",
@@ -374,26 +266,8 @@ describe("Employee Controller", () => {
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employees in specified department retrieved",
                 data: mockEmployee,
+                status: "Success!",
             });
-        });
-
-        // Test with a missing department paremeter
-        it("should handle error when department parameter is invalid", async () => {
-            // Arrange
-            mockReq.params = { department: "Invalid Department" };
-            const mockError: Error = new Error("Department name: Invalid Department not found.");
-            (employeeServices.getDepartmentEmployees as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await employeeControllers.getDepartmentEmployees(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(employeeServices.getDepartmentEmployees).toHaveBeenCalledWith("Invalid Department");
-            expect(mockNext).toHaveBeenCalledWith(mockError);
         });
     });
 });

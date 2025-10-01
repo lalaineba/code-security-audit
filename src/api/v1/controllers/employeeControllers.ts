@@ -117,7 +117,7 @@ export const deleteEmployee = async (
 
         await employeeServices.deleteEmployee(id);
         res.status(200).json(
-            successResponse("Employee deleted successfully")
+            successResponse(null, "Employee deleted successfully")
         );
     } catch (error: unknown) {
         next(error);
