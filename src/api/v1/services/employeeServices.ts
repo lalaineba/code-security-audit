@@ -41,6 +41,7 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
  * Creates a new employee item
  * @param employeeData The data for the new employee
  * @returns The created employee with generated employee ID
+ * @throws An error if employee cannot be created
  */
 export const createEmployee = async (employeeData: {
     name: string;
@@ -59,7 +60,6 @@ export const createEmployee = async (employeeData: {
         const employeeId: string = await createDocument(COLLECTION, newEmployee);
 
         return structuredClone({ employeeId, ...newEmployee } as Employee);
-
     } catch (error: unknown) {
         throw error;
     }
@@ -167,7 +167,6 @@ export const getAllBranchEmployees = async (branchId: number): Promise<Employee[
         }
 
         return structuredClone(employees);
-
     } catch (error: unknown) {
         throw error;
     }
@@ -197,7 +196,6 @@ export const getDepartmentEmployees = async (department: string): Promise<Employ
         }
 
         return structuredClone(employees);
-
     } catch (error: unknown) {
         throw error;
     }

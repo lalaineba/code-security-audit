@@ -115,7 +115,7 @@ export const deleteBranch = async (
 
         await branchServices.deleteBranch(id);
         res.status(200).json(
-            successResponse("Branch deleted successfully")
+            successResponse(null, "Branch deleted successfully")
         );
     } catch (error: unknown) {
         next(error);

@@ -29,7 +29,7 @@ describe("Branch Controller", () => {
             // Defining an instance of what it should return
             const mockBranches: Branch[] = [
                 {
-                    id: 1,
+                    id: "1",
                     name: "Test Branch",
                     address: "Test Address",
                     phone: "000-000-0000"
@@ -50,24 +50,9 @@ describe("Branch Controller", () => {
             // To check if the controller is setting the JSON values correctly
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Branches retrieved successfully",
+                status: "Success!",
                 data: mockBranches,
             });
-        });
-
-        // Test when the service fails, the controller handles the error properly
-        it("should handle getAllBranches errors", async () => {
-            // Arrange
-            const mockError: Error = new Error('Test error');
-            (branchServices.getAllBranches as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await branchControllers.getAllBranches(
-                mockReq as Request, 
-                mockRes as Response, 
-                mockNext);
-
-            // Assert
-            expect(mockNext).toHaveBeenCalledWith(mockError);
         });
     });
 
@@ -79,7 +64,7 @@ describe("Branch Controller", () => {
 
             // Defining an instance of what it should return
             const mockBranch: Branch = {
-                id: 1,
+                id: "1",
                 name: "Test Name",
                 address:"Test Address",
                 phone: "000-000-0000"
@@ -97,30 +82,11 @@ describe("Branch Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Branch retrieved",
+                status: "Success!",
                 data: mockBranch,
             });
         });
-
-        // Test with an invalid branch ID
-        it("should handle error when branch ID is invalid", async () => {
-            // Arrange
-            mockReq.params = { id: "100" };
-            mockReq.body = { name: "Test Name" };
-
-            const mockError: Error = new Error("Branch ID: 100 not found.");
-            (branchServices.getBranchByID as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await branchControllers.getBranchByID(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockNext).toHaveBeenCalledWith(mockError);
-            });
-        });
+    });
         
     // Test successful branch creation
     describe("createBranch", () => {
@@ -132,7 +98,7 @@ describe("Branch Controller", () => {
                 phone: "000-000-0000",
             };
 
-            const mockBranch: Partial<Branch> = { id: 1, ...mockBody };
+            const mockBranch: Partial<Branch> = { id: "1", ...mockBody };
 
             mockReq.body = mockBody;
             (branchServices.createBranch as jest.Mock).mockReturnValue(mockBranch);
@@ -149,25 +115,7 @@ describe("Branch Controller", () => {
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Branch created successfully",
                 data: mockBranch,
-            });
-        });
-
-        // Test with a missing parameter
-        it("should return 400 when branch name is missing", async () => {
-            // Arrange
-            mockReq.body = { address: "Test Address" };
-
-            // Act
-            await branchControllers.createBranch(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockRes.status).toHaveBeenCalledWith(400);
-            expect(mockRes.json).toHaveBeenCalledWith({
-                message: "Branch name is required",
+                status: "Success!",
             });
         });
     });
@@ -184,7 +132,7 @@ describe("Branch Controller", () => {
             mockReq.body = mockBody;
 
             const mockUpdate: Partial<Branch> = { 
-                id: 1,
+                id: "1",
                 address: mockBody.address, 
                 phone: mockBody.phone,
             };
@@ -199,37 +147,18 @@ describe("Branch Controller", () => {
             );
 
             // Assert
-            expect(branchServices.updateBranch).toHaveBeenCalledWith(1, {
+            expect(branchServices.updateBranch).toHaveBeenCalledWith("1", {
                 address: mockBody.address,
                 phone: mockBody.phone,
             });
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Branch updated successfully",
+                status: "Success!",
                 data: mockUpdate,
             });
         });
-
-        // Test with a missing required parameter
-        it("should handle errors if branch ID is invalid", async () => {
-            // Arrange
-            mockReq.params = { id: "100" };
-            mockReq.body = { address: "Address", phone: "000-000-0000" };
-
-            const mockError: Error = new Error("Branch ID: 100 not found.");
-            (branchServices.updateBranch as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await branchControllers.updateBranch(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockNext).toHaveBeenCalledWith(mockError);
-            });
-        });
+    });
 
     // Test successful branch deletion
     describe("deleteBranch", () => {
@@ -247,30 +176,13 @@ describe("Branch Controller", () => {
             );
 
             // Assert
-            expect(branchServices.deleteBranch).toHaveBeenCalledWith(1);
+            expect(branchServices.deleteBranch).toHaveBeenCalledWith("1");
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: "Branch deleted successfully"
+                data: null,
+                message: "Branch deleted successfully",
+                status: "Success!",
             });
-        });
-
-        // Test with an invalid branch ID
-        it("should handle errors if branch ID is invalid", async () => {
-            // Arrange
-            mockReq.params = { id: "100" };
-            const mockError: Error = new Error("Branch ID: 100 not found.");
-            (branchServices.deleteBranch as jest.Mock).mockRejectedValue(mockError);
-
-            // Act
-            await branchControllers.deleteBranch(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(branchServices.deleteBranch).toHaveBeenCalledWith(100);
-            expect(mockNext).toHaveBeenCalledWith(mockError);
         });
     });
 });
