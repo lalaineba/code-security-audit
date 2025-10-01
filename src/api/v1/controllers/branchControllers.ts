@@ -36,7 +36,7 @@ export const getBranchByID = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const id: number = parseInt(req.params.id); 
+        const id: string = req.params.id; 
         const branch: Branch = await branchServices.getBranchByID(id);
         res.status(200).json(
             successResponse(branch,"Branch retrieved")
@@ -82,7 +82,7 @@ export const updateBranch = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const id: number = parseInt(req.params.id);
+        const id: string = req.params.id;
         // Extracting the fields to be updated from the body
         const { address, phone } = req.body;
         // Create the update branch object with fields to be updated
@@ -111,7 +111,7 @@ export const deleteBranch = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const id: number = parseInt(req.params.id);
+        const id: string = req.params.id;
 
         await branchServices.deleteBranch(id);
         res.status(200).json(
