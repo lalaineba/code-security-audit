@@ -25,7 +25,6 @@ export const validateRequest = (
     schemas: RequestSchemas,
     options: ValidationOptions = {}
 ): MiddlewareFunction => {
-    // stripParams - Usually don't strip params as they're route-defined
     const defaultOptions = {
         stripBody: true,
         stripQuery: true,
@@ -52,7 +51,6 @@ export const validateRequest = (
                 partName: string,
                 shouldStrip: boolean
             ) => {
-                // abortEarly: false means continue validation even if something fails in the validaiton
                 const { error, value } = schema.validate(data, {
                     abortEarly: false,
                     stripUnknown: shouldStrip,
@@ -70,7 +68,6 @@ export const validateRequest = (
                 return data;
             };
 
-            // Validate each request part if schema is provided
             if (schemas.body) {
                 req.body = validatePart(
                     schemas.body,
@@ -98,7 +95,6 @@ export const validateRequest = (
                 );
             }
 
-            // If there are any validation errors, return them
             if (errors.length > 0) {
                 return res.status(400).json({
                     error: `Validation error: ${errors.join(", ")}`,

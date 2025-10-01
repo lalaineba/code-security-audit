@@ -1,12 +1,51 @@
-import { employees } from "../../../data/employees";
+import {
+    QuerySnapshot,
+    DocumentData,
+    DocumentSnapshot,
+} from "firebase-admin/firestore";
 import { Employee } from "../models/models";
+import {
+    createDocument,
+    getDocuments,
+    getDocumentById,
+    updateDocument,
+    deleteDocument,
+} from "../repositories/firestoreRepository";
+
+import { employeeSchemas } from "../validations/employeeValidations";
+import { validateRequest } from "../middleware/validate";
+
+// Reference to the firestore collection name
+const COLLECTION: string = "employees";
 
 /**
  * Retrieves all employees from storage
  * @returns Array of all employees
+ * @throws An error if employees cannot be retrieved
  */
-export const getAllEmployees = async(): Promise<Employee[]> => {
-    return structuredClone(employees);
+export const getAllEmployees = async (): Promise<Employee[]> => { 
+    try {
+        const snapshot: QuerySnapshot = await getDocuments(COLLECTION);
+        const employees: Employee[] = snapshot.docs.map((doc) => {
+            const data: DocumentData = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+                /*
+                name: data.name,
+                position: data.position,
+                department: data.department,
+                email: data.email,
+                phone: data.phone,
+                branchId: data.branchId,
+                */
+            } as Employee;
+        });
+
+        return employees;
+    } catch (error: unknown) {
+        throw error;
+    }
 };
 
 /**
@@ -23,20 +62,19 @@ export const createEmployee = async (employeeData: {
     branchId: number;
 }): Promise<Employee> => {
     // Creating a new employee data with unique generated ID
-    const newEmployee: Employee = {
-        id: Number((employees.length) + 1),
-        name: employeeData.name,
-        position: employeeData.position,
-        department: employeeData.department,
-        email: employeeData.email,
-        phone: employeeData.phone,
-        branchId: employeeData.branchId,
-    };
+    try {
+        // No need to define the ID anymore because the Firestore will do it 
+        const newEmployee: Partial<Employee> = {
+            ...employeeData,
+        };
 
-    // Adds the new employee to the end of the employees array
-    employees.push(newEmployee);
-    
-    return structuredClone(newEmployee);
+        const employeeId: string = await createDocument(COLLECTION, newEmployee);
+
+        return structuredClone({ employeeId, ...newEmployee } as Employee);
+
+    } catch (error: unknown) {
+        throw error;
+    }
 };
 
 /**
@@ -67,22 +105,29 @@ export const getEmployeeByID = async (id: number): Promise<Employee> => {
  */
 export const updateEmployee = async (
     id: number,
-    // From this Employee object, we can only pick position and/or phone
     employeeData: Pick<Employee, "position" | "phone">
 ): Promise<Employee> => {
-    // findIndex searches for the index of employee whose ID matches the given ID
-    const employeeIndex: number = employees.findIndex((employee: Employee) => employee.id === id);
-    
-    if (employeeIndex === -1) {
-        throw new Error(`Employee ID: ${id} not found.`);
-    };
+    try {
+        const employee: Employee = await getEmployeeByID(id);
+        if (!employee) {
+            throw new Error(`Employee ID: ${id} not found.`);
+        }
 
-    // Spread operator: takes each value of the employee and reapply it to the new updated employee
-    // Basically merges any existing item (that we didn't update) with the updated data
-    // Then create a new instance of that employee item
-    employees[employeeIndex] = { ...employees[employeeIndex], ...employeeData };
+        const updateEmployee: Employee = {
+            ...employee,
+        };
 
-    return structuredClone(employees[employeeIndex]);
+        if (employeeData.position !== undefined)
+            updateEmployee.position = employeeData.position;
+        if (employeeData.phone !== undefined)
+            updateEmployee.phone = employeeData.phone;
+
+        await updateDocument<Employee>(COLLECTION, id.toString(), updateEmployee);
+
+        return structuredClone(updateEmployee);
+    } catch (error: unknown) {
+        throw error;
+    }
 };
 
 /**
