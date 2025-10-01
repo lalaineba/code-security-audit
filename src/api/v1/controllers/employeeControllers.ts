@@ -38,8 +38,7 @@ export const getEmployeeByID = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        // req.params are always strings by default so we need to convert the id to number
-        const id: number = parseInt(req.params.id); 
+        const id: string = req.params.id;
         const employee: Employee = await employeeServices.getEmployeeByID(id);
         res.status(200).json(
             successResponse(employee, "Get an employee")
