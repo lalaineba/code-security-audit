@@ -79,7 +79,7 @@ export const createBranch = async (branchData: {
 }): Promise<Branch> => {
     try {
         const newBranch: Partial<Branch> = {
-        ...branchData
+        ...branchData,
     };
 
         const branchId: string = await createDocument(COLLECTION, newBranch);
