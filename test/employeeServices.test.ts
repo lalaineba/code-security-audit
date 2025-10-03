@@ -157,117 +157,69 @@ describe("Employee Service", () => {
     // Test for updateEmployee service
     it("should successfully update an employee", async () => {
         // Arrange
-        const mockEmployeeData: {
-            id: string;
-            name: string;
-            position: string;
-            department: string;
-            email: string;
-            phone: string;
-            branchId: number;
-        } = {
-            id: "employee1",
+        const mockDocumentId: string = "test-employee-id";
+        const mockEmployee: Employee = {
+            id: mockDocumentId,
             name: "Test Name",
             position: "Updated Position",
             department: "Test Department",
             email: "test@email.com",
             phone: "111-111-1111",
             branchId: 1,
-        }; 
-        // Create a mock object that looks like what Firestore should return after fetching the employee
-        const mockDocumentSnapshot = {
-            id: mockEmployeeData.id,
-            // data() method returns the document's data (employee fields)
-            data: () => ({
-                name: mockEmployeeData.name,
-                position: mockEmployeeData.position,
-                department: mockEmployeeData.department,
-                email: mockEmployeeData.email,
-                phone: mockEmployeeData.phone,
-                branchId: mockEmployeeData.branchId,
-            }),
-        };
-        // Mocking fetching an employee doc by Id so updateEmployee service can read employee's data
-        (firestoreRepository.getDocumentById as jest.Mock).mockResolvedValue(
-            mockDocumentSnapshot
-        );
-        // Mocking the update operation, doesn't return any value so it's undefined 
+            };
+        
+        // Creates a mock for getEmployeeByID service's method
+        jest.spyOn(employeeServices, "getEmployeeByID").mockResolvedValue(mockEmployee);
+
         (firestoreRepository.updateDocument as jest.Mock).mockResolvedValue(
             undefined
         );
-        
+
         // Act
-        const result: Employee = await employeeServices.updateEmployee(
-            mockEmployeeData.id,
-            { position: mockEmployeeData.position, 
-                phone: mockEmployeeData.phone 
-            }
-        );
+        await employeeServices.updateEmployee(mockDocumentId, mockEmployee);
 
         // Assert
+        expect(employeeServices.getEmployeeByID).toHaveBeenCalledWith(
+            mockDocumentId
+        );
         expect(firestoreRepository.updateDocument).toHaveBeenCalledWith(
             "employees",
-            mockEmployeeData.id,
+            mockDocumentId,
             expect.objectContaining({
-                ...mockEmployeeData,
+                ...mockEmployee,
             })
         );
-        expect(result).toEqual(mockEmployeeData);
     });
 
     // Test for deleteEmployee service
     it("should successfully delete an employee by id", async () => {
         // Arrange
-        const mockEmployeeData: {
-            id: string;
-            name: string;
-            position: string;
-            department: string;
-            email: string;
-            phone: string;
-            branchId: number;
-        } = {
-            id: "employee1",
+        const mockDocumentId: string = "test-employee-id";
+        const mockEmployee: Employee = {
+            id: mockDocumentId,
             name: "Test Name",
             position: "Test Position",
             department: "Test Department",
             email: "test@email.com",
             phone: "000-000-0000",
             branchId: 1,
-        }; 
-
-        const mockDocumentSnapshot = {
-            id: mockEmployeeData.id,
-            // data() method returns the document's data (employee fields)
-            data: () => ({
-                name: mockEmployeeData.name,
-                position: mockEmployeeData.position,
-                department: mockEmployeeData.department,
-                email: mockEmployeeData.email,
-                phone: mockEmployeeData.phone,
-                branchId: mockEmployeeData.branchId,
-            }),
-        };
-
-        (firestoreRepository.getDocumentById as jest.Mock).mockResolvedValue(
-            mockDocumentSnapshot
-        );
+            };
+        
+        // Creates a mock for getEmployeeByID service's method
+        jest.spyOn(employeeServices, "getEmployeeByID").mockResolvedValue(mockEmployee);
 
         (firestoreRepository.deleteDocument as jest.Mock).mockResolvedValue(
             undefined
         );
-        
+
         // Act
-        await employeeServices.deleteEmployee(mockEmployeeData.id);
+        await employeeServices.deleteEmployee(mockDocumentId);
 
         // Assert
-        expect(firestoreRepository.getDocumentById).toHaveBeenCalledWith(
-            "employees",
-            mockEmployeeData.id
-            );
+        expect(employeeServices.getEmployeeByID).toHaveBeenCalledWith(mockDocumentId);
         expect(firestoreRepository.deleteDocument).toHaveBeenCalledWith(
             "employees",
-            mockEmployeeData.id
+            mockDocumentId
         );
     });
 

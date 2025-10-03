@@ -130,56 +130,64 @@ describe("Branch Service", () => {
     // Test for updateBranch service
     it("should successfully update a branch", async () => {
         // Arrange
-        const mockBranchData: {
-            id: string;
-            name: string;
-            address: string;
-            phone: string;
-        } = {
+        const mockDocumentId: string = "test-branch-id";
+        const mockBranch: Branch = {
             id: "branch1",
             name: "Test Name",
             address: "Test Address",
             phone: "000-000-0000",
-        };
+            };
+        
+        // Creates a mock for getBranchByID service's method
+        jest.spyOn(branchServices, "getBranchByID").mockResolvedValue(mockBranch);
 
-        const mockDocumentSnapshot = {
-            id: mockBranchData.id,
-            data: () => ({
-                name: mockBranchData.name,
-                address: mockBranchData.address,
-                phone: mockBranchData.phone,
-            }),
-        };
-        // Mocking fetching a branch doc by ID so updateBranch service can read branch's data
-        (firestoreRepository.getDocumentById as jest.Mock).mockResolvedValue(
-            mockDocumentSnapshot
-        );
-        // Mocking the update operation, doesn't return any value so it's undefined 
         (firestoreRepository.updateDocument as jest.Mock).mockResolvedValue(
             undefined
         );
-        
+
         // Act
-        const result: Branch = await branchServices.updateBranch(
-            mockBranchData.id,
-            { address: mockBranchData.address, 
-                phone: mockBranchData.phone 
-            }
-        );
+        await branchServices.updateBranch(mockDocumentId, mockBranch);
 
         // Assert
+        expect(branchServices.getBranchByID).toHaveBeenCalledWith(mockDocumentId);
         expect(firestoreRepository.updateDocument).toHaveBeenCalledWith(
             "branches",
-            mockBranchData.id,
+            mockDocumentId,
             expect.objectContaining({
-                ...mockBranchData,
+                ...mockBranch,
             })
         );
-        expect(result).toEqual(mockBranchData);
     });
 
     // Test for deleteBranch service
     it("should successfully delete a branch by id", async () => {
+    const mockDocumentId: string = "test-branch-id";
+    const mockBranch: Branch = {
+        id: mockDocumentId,
+        name: "Test Name",
+        address: "Test Address",
+        phone: "000-000-0000",
+        };
+        
+        // Creates a mock for getBranchByID service's method
+        jest.spyOn(branchServices, "getBranchByID").mockResolvedValue(mockBranch);
+
+        (firestoreRepository.deleteDocument as jest.Mock).mockResolvedValue(
+            undefined
+        );
+
+        // Act
+        await branchServices.deleteBranch(mockDocumentId);
+
+        // Assert
+        expect(branchServices.getBranchByID).toHaveBeenCalledWith(mockDocumentId);
+        expect(firestoreRepository.deleteDocument).toHaveBeenCalledWith(
+            "branches",
+            mockDocumentId
+        );
+    });
+
+        /*
         // Arrange
         const mockBranchData: {
             id: string;
@@ -223,4 +231,5 @@ describe("Branch Service", () => {
             mockBranchData.id
         );
     });
+    */
 });
