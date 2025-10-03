@@ -84,7 +84,7 @@ export const createBranch = async (branchData: {
 
         const branchId: string = await createDocument(COLLECTION, newBranch);
 
-        return structuredClone({ branchId, ...newBranch } as Branch);   
+        return structuredClone({ id: branchId, ...newBranch } as Branch);   
     } catch (error: unknown) {
         throw error;
     }

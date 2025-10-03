@@ -59,7 +59,7 @@ export const createEmployee = async (employeeData: {
 
         const employeeId: string = await createDocument(COLLECTION, newEmployee);
 
-        return structuredClone({ employeeId, ...newEmployee } as Employee);
+        return structuredClone({ id: employeeId, ...newEmployee } as Employee);
     } catch (error: unknown) {
         throw error;
     }
