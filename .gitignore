@@ -4,3 +4,6 @@ dist/
 .vscode/
 
 bed-assignment-3-801a3-firebase-adminsdk-fbsvc-ee05930002.json
+
+src\data\branches.ts
+src\data\employees.ts
