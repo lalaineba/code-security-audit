@@ -21,7 +21,6 @@ const COLLECTION: string = "branches";
  * @throws An error if branches cannot be retrieved
  */
 export const getAllBranches = async(): Promise<Branch[]> => {
-    try {
         const snapshot: QuerySnapshot = await getDocuments(COLLECTION);
         const branches: Branch[] = snapshot.docs.map((doc) => {
             const data: DocumentData = doc.data();
@@ -32,9 +31,6 @@ export const getAllBranches = async(): Promise<Branch[]> => {
         });
 
         return branches;
-    } catch (error: unknown) {
-        throw error;
-    }
 };
 
 /**
@@ -44,26 +40,22 @@ export const getAllBranches = async(): Promise<Branch[]> => {
  * @throws An error if branch ID is not found
  */
 export const getBranchByID = async (id: string): Promise<Branch> => {
-    try {
-        const doc: DocumentSnapshot | null = await getDocumentById(
-            COLLECTION,
-            id
-        );
+    const doc: DocumentSnapshot | null = await getDocumentById(
+        COLLECTION,
+        id
+    );
 
-        if (!doc) {
-            throw new Error(`Branch ID: ${id} not found.`);
-        }
-
-        const data: DocumentData | undefined = doc.data();
-        const branch: Branch = {
-            id: doc.id,
-            ...data,
-        } as Branch;
-
-        return structuredClone(branch);
-    } catch (error: unknown) {
-        throw error;
+    if (!doc) {
+        throw new Error(`Branch ID: ${id} not found.`);
     }
+
+    const data: DocumentData | undefined = doc.data();
+    const branch: Branch = {
+        id: doc.id,
+        ...data,
+    } as Branch;
+
+    return structuredClone(branch);
 };
 
 /**
@@ -77,17 +69,13 @@ export const createBranch = async (branchData: {
     address: string;
     phone: string;
 }): Promise<Branch> => {
-    try {
-        const newBranch: Partial<Branch> = {
-        ...branchData,
+    const newBranch: Partial<Branch> = {
+    ...branchData,
     };
 
-        const branchId: string = await createDocument(COLLECTION, newBranch);
+    const branchId: string = await createDocument(COLLECTION, newBranch);
 
-        return structuredClone({ id: branchId, ...newBranch } as Branch);   
-    } catch (error: unknown) {
-        throw error;
-    }
+    return structuredClone({ id: branchId, ...newBranch } as Branch);   
 };
 
 /**
@@ -102,27 +90,23 @@ export const updateBranch = async (
     // From this Branch object, we can only pick address and/or phone
     branchData: Pick<Branch, "address" | "phone">
 ): Promise<Branch> => {
-    try {
-        const branch: Branch = await getBranchByID(id);
-        if (!branch) {
-            throw new Error(`Branch ID: ${id} not found.`);
-        }
-
-        const updateBranch: Branch = {
-            ...branch,
-        };
-
-        if (branchData.address !== undefined)
-            updateBranch.address = branchData.address;
-        if (branchData.phone !== undefined)
-            updateBranch.phone = branchData.phone;
-
-        await updateDocument<Branch>(COLLECTION, id, updateBranch);
-
-        return structuredClone(updateBranch);
-    } catch (error: unknown) {
-        throw error;
+    const branch: Branch = await getBranchByID(id);
+    if (!branch) {
+        throw new Error(`Branch ID: ${id} not found.`);
     }
+
+    const updateBranch: Branch = {
+        ...branch,
+    };
+
+    if (branchData.address !== undefined)
+        updateBranch.address = branchData.address;
+    if (branchData.phone !== undefined)
+        updateBranch.phone = branchData.phone;
+
+    await updateDocument<Branch>(COLLECTION, id, updateBranch);
+
+    return structuredClone(updateBranch);
 };
 
 /**
@@ -131,14 +115,10 @@ export const updateBranch = async (
  * @throws An error if branch ID is not found
  */
 export const deleteBranch = async (id: string): Promise<void> => {
-    try {
-        const branch: Branch = await getBranchByID(id);
-        if (!branch) { 
-            throw new Error(`Branch ID: ${id} not found.`);
-        }
-
-        await deleteDocument(COLLECTION, id);
-    } catch (error: unknown) {
-        throw error;
+    const branch: Branch = await getBranchByID(id);
+    if (!branch) { 
+        throw new Error(`Branch ID: ${id} not found.`);
     }
+
+    await deleteDocument(COLLECTION, id);
 };

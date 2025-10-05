@@ -31,12 +31,12 @@ describe("Employee Service", () => {
             branchId: 1,
         }; 
         // Create a mock object that looks like what Firestore should return
-        const mockQuerySnapshot = {
+        const mockQuerySnapshot: object = {
             docs: [
                 {
                     id: mockEmployeeData.id,
                     // data() method returns the document's data (employee fields)
-                    data: () => ({
+                    data: (): Partial<Employee> => ({
                         name: mockEmployeeData.name,
                         position: mockEmployeeData.position,
                         department: mockEmployeeData.department,
@@ -124,10 +124,10 @@ describe("Employee Service", () => {
             branchId: 1,
         }; 
         // Create a mock object that looks like what Firestore should return
-        const mockDocumentSnapshot = {
+        const mockDocumentSnapshot: object = {
             id: mockEmployeeData.id,
             // data() method returns the document's data (employee fields)
-            data: () => ({
+            data: (): Partial<Employee> => ({
                 name: mockEmployeeData.name,
                 position: mockEmployeeData.position,
                 department: mockEmployeeData.department,
@@ -244,10 +244,10 @@ describe("Employee Service", () => {
             branchId: 1,
         }; 
         // Create a mock object that looks like what Firestore should return
-        const mockDocumentSnapshot = {
+        const mockDocumentSnapshot: object = {
             id: mockEmployeeData.id,
             // data() method returns the document's data (employee fields)
-            data: () => ({
+            data: (): Partial<Employee> => ({
                 name: mockEmployeeData.name,
                 position: mockEmployeeData.position,
                 department: mockEmployeeData.department,
@@ -292,10 +292,10 @@ describe("Employee Service", () => {
             branchId: 1,
         }; 
         // Create a mock object that looks like what Firestore should return
-        const mockDocumentSnapshot = {
+        const mockDocumentSnapshot: object = {
             id: mockEmployeeData.id,
             // data() method returns the document's data (employee fields)
-            data: () => ({
+            data: (): Partial<Employee> => ({
                 name: mockEmployeeData.name,
                 position: mockEmployeeData.position,
                 department: mockEmployeeData.department,

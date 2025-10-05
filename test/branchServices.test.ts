@@ -25,12 +25,12 @@ describe("Branch Service", () => {
             phone: "000-000-0000",
         }; 
 
-        const mockQuerySnapshot = {
+        const mockQuerySnapshot: object = {
             docs: [
                 {
                     id: mockBranchData.id,
                     // data() method returns the document's data (branch fields)
-                    data: () => ({
+                    data: (): Partial<Branch> => ({
                         name: mockBranchData.name,
                         address: mockBranchData.address,
                         phone: mockBranchData.phone,
@@ -100,10 +100,10 @@ describe("Branch Service", () => {
             phone: "000-000-0000",
         }; 
         // Create a mock object that looks like what Firestore should return
-        const mockDocumentSnapshot = {
+        const mockDocumentSnapshot: object = {
             id: mockBranchData.id,
             // data() method returns the document's data (branch fields)
-            data: () => ({
+            data: (): Partial<Branch> => ({
                 name: mockBranchData.name,
                 address: mockBranchData.address,
                 phone: mockBranchData.phone,
@@ -186,50 +186,4 @@ describe("Branch Service", () => {
             mockDocumentId
         );
     });
-
-        /*
-        // Arrange
-        const mockBranchData: {
-            id: string;
-            name: string;
-            address: string;
-            phone: string;
-        } = {
-            id: "branch1",
-            name: "Test Name",
-            address: "Test Address",
-            phone: "000-000-0000",
-        };
-
-        const mockDocumentSnapshot = {
-            id: mockBranchData.id,
-            data: () => ({
-                name: mockBranchData.name,
-                address: mockBranchData.address,
-                phone: mockBranchData.phone,
-            }),
-        };
-
-        (firestoreRepository.getDocumentById as jest.Mock).mockResolvedValue(
-            mockDocumentSnapshot
-        );
-
-        (firestoreRepository.deleteDocument as jest.Mock).mockResolvedValue(
-            undefined
-        );
-        
-        // Act
-        await branchServices.deleteBranch(mockBranchData.id);
-
-        // Assert
-        expect(firestoreRepository.getDocumentById).toHaveBeenCalledWith(
-            "branches",
-            mockBranchData.id
-            );
-        expect(firestoreRepository.deleteDocument).toHaveBeenCalledWith(
-            "branches",
-            mockBranchData.id
-        );
-    });
-    */
 });

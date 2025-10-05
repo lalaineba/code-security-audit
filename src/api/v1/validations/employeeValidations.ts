@@ -1,9 +1,10 @@
 import Joi from "joi";
+import { RequestSchema } from "../middleware/validate";
 
 /**
  * Employee schema organized by request type
  */
-export const employeeSchemas = {
+export const employeeSchemas: Record<string, RequestSchema> = {
     // POST /api/v1/employees - Create new Employee
     create: {
         body: Joi.object({

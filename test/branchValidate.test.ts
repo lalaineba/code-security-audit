@@ -69,7 +69,7 @@ describe("Validation Middleware", () => {
         // Arrange
         mockReq.params = { id: "1" };
         mockReq.body = { address: "Update Address", phone: "111-000-0000" };
-        const middleware = validateRequest(branchSchemas.update);
+        const middleware: MiddlewareFunction = validateRequest(branchSchemas.update);
 
         // Act
         middleware(mockReq as Request, mockRes as Response, mockNext);
@@ -86,7 +86,7 @@ describe("Validation Middleware", () => {
         // Address is an empty string
         mockReq.params = { id: "1" };
         mockReq.body = { address: "", phone: "000-000-0000" };
-        const middleware = validateRequest(branchSchemas.update);
+        const middleware: MiddlewareFunction = validateRequest(branchSchemas.update);
 
         // Act
         middleware(mockReq as Request, mockRes as Response, mockNext);

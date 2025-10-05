@@ -1,9 +1,10 @@
 import Joi from "joi";
+import { RequestSchema } from "../middleware/validate";
 
 /**
  * Branch schema organized by request type
  */
-export const branchSchemas = {
+export const branchSchemas: Record<string, RequestSchema> = {
     // POST /api/v1/branches - Create new Branch
     create: {
         body: Joi.object({

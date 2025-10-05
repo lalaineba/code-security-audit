@@ -75,7 +75,7 @@ describe("Validation Middleware", () => {
         // Arrange
         mockReq.params = { id: "1" };
         mockReq.body = { postion: "Update Position", phone: "111-000-0000" };
-        const middleware = validateRequest(employeeSchemas.update);
+        const middleware: MiddlewareFunction = validateRequest(employeeSchemas.update);
 
         // Act
         middleware(mockReq as Request, mockRes as Response, mockNext);
@@ -92,7 +92,7 @@ describe("Validation Middleware", () => {
         // Position is an empty string
         mockReq.params = { id: "1" };
         mockReq.body = { position: "", phone: "000-000-0000" };
-        const middleware = validateRequest(employeeSchemas.update);
+        const middleware: MiddlewareFunction = validateRequest(employeeSchemas.update);
 
         // Act
         middleware(mockReq as Request, mockRes as Response, mockNext);
