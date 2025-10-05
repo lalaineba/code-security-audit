@@ -105,7 +105,7 @@ export const validateRequest = (
 
             next();
         } catch (error: unknown) {
-            const errorMessage =
+            const errorMessage: string =
                 error instanceof Error ? error.message : String(error);
             console.error(errorMessage);
             res.status(400).json({

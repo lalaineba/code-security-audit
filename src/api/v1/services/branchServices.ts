@@ -20,7 +20,7 @@ const COLLECTION: string = "branches";
  * @returns Array of all branches
  * @throws An error if branches cannot be retrieved
  */
-export const getAllBranches = async(): Promise<Branch[]> => {
+export const getAllBranches = async (): Promise<Branch[]> => {
         const snapshot: QuerySnapshot = await getDocuments(COLLECTION);
         const branches: Branch[] = snapshot.docs.map((doc) => {
             const data: DocumentData = doc.data();
