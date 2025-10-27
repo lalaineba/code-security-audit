@@ -2,5 +2,10 @@ node_modules/
 dist/
 
 .vscode/
+.env
 
 bed-assignment-3-801a3-firebase-adminsdk-fbsvc-ee05930002.json
+
+logs/
+
+openapi.json

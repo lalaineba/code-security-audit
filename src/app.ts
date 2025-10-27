@@ -1,7 +1,11 @@
+// External imports
 import express, { Express } from "express";
 import morgan from "morgan";
 import setupSwagger from "../config/swagger";
+import dotenv from "dotenv";
+dotenv.config();
 
+// Internal imports
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
 
