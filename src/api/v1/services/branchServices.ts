@@ -1,12 +1,36 @@
-import { branches } from "../../../data/branches";
 import { Branch } from "../models/models";
+import {
+    QuerySnapshot,
+    DocumentData,
+    DocumentSnapshot,
+} from "firebase-admin/firestore";
+import {
+    createDocument,
+    getDocuments,
+    getDocumentById,
+    updateDocument,
+    deleteDocument,
+} from "../repositories/firestoreRepository";
+
+// Reference to the firestore collection name
+const COLLECTION: string = "branches";
 
 /**
  * Retrieves all branches from storage
  * @returns Array of all branches
+ * @throws An error if branches cannot be retrieved
  */
-export const getAllBranches = async(): Promise<Branch[]> => {
-    return structuredClone(branches);
+export const getAllBranches = async (): Promise<Branch[]> => {
+        const snapshot: QuerySnapshot = await getDocuments(COLLECTION);
+        const branches: Branch[] = snapshot.docs.map((doc) => {
+            const data: DocumentData = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+            } as Branch;
+        });
+
+        return branches;
 };
 
 /**
@@ -15,13 +39,21 @@ export const getAllBranches = async(): Promise<Branch[]> => {
  * @returns A branch item with its data 
  * @throws An error if branch ID is not found
  */
-export const getBranchByID = async (id: number): Promise<Branch> => {
-    const allBranches: Branch[] = await getAllBranches();
-    const branch: Branch | undefined = allBranches.find((branch: Branch) => branch.id === id);
+export const getBranchByID = async (id: string): Promise<Branch> => {
+    const doc: DocumentSnapshot | null = await getDocumentById(
+        COLLECTION,
+        id
+    );
 
-    if (!branch) {
+    if (!doc) {
         throw new Error(`Branch ID: ${id} not found.`);
-    };
+    }
+
+    const data: DocumentData | undefined = doc.data();
+    const branch: Branch = {
+        id: doc.id,
+        ...data,
+    } as Branch;
 
     return structuredClone(branch);
 };
@@ -30,24 +62,20 @@ export const getBranchByID = async (id: number): Promise<Branch> => {
  * Creates a new branch item
  * @param branchControllers The data for the new branch
  * @returns The created branch with generated branch ID
+ * @throws An error if branch cannot be created
  */
 export const createBranch = async (branchData: {
     name: string;
     address: string;
     phone: string;
 }): Promise<Branch> => {
-    // Creating a new branch data with unique generated ID
-    const newBranch: Branch = {
-        id: Number((branches.length) + 1),
-        name: branchData.name,
-        address: branchData.address,
-        phone: branchData.phone,
+    const newBranch: Partial<Branch> = {
+    ...branchData,
     };
 
-    // Adds the new branch to the end of the branch array
-    branches.push(newBranch);
-    
-    return structuredClone(newBranch);
+    const branchId: string = await createDocument(COLLECTION, newBranch);
+
+    return structuredClone({ id: branchId, ...newBranch } as Branch);   
 };
 
 /**
@@ -58,19 +86,27 @@ export const createBranch = async (branchData: {
  * @throws An error if branch ID is not found
  */
 export const updateBranch = async (
-    id: number,
+    id: string,
     // From this Branch object, we can only pick address and/or phone
     branchData: Pick<Branch, "address" | "phone">
 ): Promise<Branch> => {
-    const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
-
-    if (branchIndex === -1) {
+    const branch: Branch = await getBranchByID(id);
+    if (!branch) {
         throw new Error(`Branch ID: ${id} not found.`);
+    }
+
+    const updateBranch: Branch = {
+        ...branch,
     };
-    
-    branches[branchIndex] = { ...branches[branchIndex], ...branchData };
-    
-    return structuredClone(branches[branchIndex]);
+
+    if (branchData.address !== undefined)
+        updateBranch.address = branchData.address;
+    if (branchData.phone !== undefined)
+        updateBranch.phone = branchData.phone;
+
+    await updateDocument<Branch>(COLLECTION, id, updateBranch);
+
+    return structuredClone(updateBranch);
 };
 
 /**
@@ -78,12 +114,11 @@ export const updateBranch = async (
  * @param id The ID of the branch to delete
  * @throws An error if branch ID is not found
  */
-export const deleteBranch = async (id: number): Promise<void> => {
-    const index: number = branches.findIndex((branch: Branch) => branch.id === id);
-
-    if (index === -1) { 
+export const deleteBranch = async (id: string): Promise<void> => {
+    const branch: Branch = await getBranchByID(id);
+    if (!branch) { 
         throw new Error(`Branch ID: ${id} not found.`);
     }
 
-    branches.splice(index, 1);
+    await deleteDocument(COLLECTION, id);
 };

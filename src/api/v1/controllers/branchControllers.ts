@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as branchServices from "../services/branchServices";
 import { Branch } from "../models/models";
+import { successResponse } from "../models/responseModels";
 
 /**
  * Manages requests and responses to retrieve all branches.
@@ -15,10 +16,9 @@ export const getAllBranches = async (
 ): Promise<void> => {
     try {
         const branch: Branch[] = await branchServices.getAllBranches();
-        res.status(200).json({ 
-            message: "Branches retrieved successfully", 
-            data: branch,
-        });
+        res.status(200).json(
+            successResponse(branch, "Branches retrieved successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -36,12 +36,11 @@ export const getBranchByID = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const id: number = parseInt(req.params.id); 
+        const id: string = req.params.id; 
         const branch: Branch = await branchServices.getBranchByID(id);
-         res.status(200).json({
-            message: "Branch retrieved",
-            data: branch,
-        });
+        res.status(200).json(
+            successResponse(branch,"Branch retrieved")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -59,28 +58,13 @@ export const createBranch = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        if (!req.body.name) {
-            res.status(400).json({
-                message: "Branch name is required",
-            });
-        } else if (!req.body.address) {
-            res.status(400).json({
-                message: "Branch address is required",
-            });
-        } else if (!req.body.phone) {
-            res.status(400).json({
-                message: "Branch phone number is required",
-            });
-        } else {
-            const { name, address, phone } = req.body;
-            const newBranch: Branch = await branchServices.createBranch({
-                    name, address, phone
-                });
-                res.status(201).json({
-                    message: "Branch created successfully",
-                    data: newBranch,
-                });
-            }
+        const { name, address, phone } = req.body;
+        const newBranch: Branch = await branchServices.createBranch({
+            name, address, phone
+        });
+        res.status(201).json(
+            successResponse(newBranch, "Branch created successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -98,17 +82,20 @@ export const updateBranch = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const id: number = parseInt(req.params.id);
+        const id: string = req.params.id;
         // Extracting the fields to be updated from the body
         const { address, phone } = req.body;
         // Create the update branch object with fields to be updated
-        const updatedBranch: Branch = await branchServices.updateBranch(id, { address, phone });
-        res.status(200).json({
-            message: "Branch updated successfully",
-            data: updatedBranch,
+        const updatedBranch: Branch = await branchServices.updateBranch(id, { 
+            address,
+            phone
         });
+
+        res.status(200).json(
+            successResponse(updatedBranch, "Branch updated successfully")
+        );
     } catch (error: unknown) {
-    next(error);
+        next(error);
     }
 };
 
@@ -124,12 +111,12 @@ export const deleteBranch = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const id: number = parseInt(req.params.id);
+        const id: string = req.params.id;
 
         await branchServices.deleteBranch(id);
-        res.status(200).json({
-            message: "Branch deleted successfully",
-        });
+        res.status(200).json(
+            successResponse(null, "Branch deleted successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }

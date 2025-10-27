@@ -2,7 +2,7 @@
  * Interface for the Employee structure.
  */
 export interface Employee {
-    id: number;
+    id: string;
     name: string;
     position: string;
     department: string;
@@ -15,7 +15,7 @@ export interface Employee {
  * Interface for the Branch structure. 
  */
 export interface Branch {
-    id: number;
+    id: string;
     name: string;
     address: string;
     phone: string;
