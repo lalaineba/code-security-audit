@@ -1,5 +1,6 @@
 import express, { Express } from "express";
 import morgan from "morgan";
+import setupSwagger from "../config/swagger";
 
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
@@ -46,5 +47,7 @@ app.use("/api/v1/employees", employeeRoutes);
 
 // Create a prefix for all branch routes
 app.use("/api/v1/branches", branchRoutes);
+
+setupSwagger(app);
 
 export default app;
