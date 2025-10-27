@@ -1,5 +1,12 @@
 import { HelmetOptions } from "helmet";
 
+/**
+ * Environment-Based Configuration 
+ * In development: relaxed security so it won't interfere with debugging tools and testing
+ * In production: environments need maximum security
+ * 
+ * @returns {HelmetOptions} A Helmet configuration object
+ */
 export const getHelmetConfig = (): HelmetOptions => {
     const isDevelopment: boolean = process.env.NODE_ENV === "development";
 

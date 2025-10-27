@@ -10,6 +10,7 @@ dotenv.config();
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
 import { getHelmetConfig } from "../config/helmetConfig";
+import { getCorsConfig } from "../config/corsConfig";
 import setupSwagger from "../config/swagger";
 
 // initialize the express application
@@ -28,6 +29,7 @@ app.use(morgan("combined"));
 app.use(helmet());
 app.use(helmet(getHelmetConfig()));
 app.use(cors());
+app.use(cors(getCorsConfig()));
 
 // Ensures incoming body is correctly parsed to JSON
 app.use(express.json());
