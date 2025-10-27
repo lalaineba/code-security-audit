@@ -1,13 +1,16 @@
 // External imports
 import express, { Express } from "express";
 import morgan from "morgan";
-import setupSwagger from "../config/swagger";
+import helmet from "helmet";
+import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
 // Internal imports
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
+import { getHelmetConfig } from "../config/helmetConfig";
+import setupSwagger from "../config/swagger";
 
 // initialize the express application
 const app: Express = express();
@@ -20,9 +23,13 @@ interface HealthCheckResponse {
     version: string;
 }
 
-// Use morgan as a middleware for HTTP request logging
-// "combined" is a predefined format for morgan
+// Middleware START
 app.use(morgan("combined"));
+app.use(helmet());
+app.use(helmet(getHelmetConfig()));
+app.use(cors());
+
+// Ensures incoming body is correctly parsed to JSON
 app.use(express.json());
 
 // Respond to GET request at endpoint "/" with message
