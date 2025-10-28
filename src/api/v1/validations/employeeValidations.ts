@@ -19,7 +19,7 @@ import { RequestSchema } from "../middleware/validate";
  *         id:
  *           type: string
  *           description: The Firestore document ID for the employee
- *           example: "test-employee-id"
+ *           example: "fe4ghb67dg2d1ac1"
  *         name:
  *           type: string
  *           description: Full name of the employee

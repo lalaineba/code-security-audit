@@ -16,7 +16,7 @@ import { RequestSchema } from "../middleware/validate";
  *         id:
  *           type: string
  *           description: The Firestore document ID for the branch
- *           example: "branch_abc123"
+ *           example: "g9sdfh4nc85hd47bvn"
  *         name:
  *           type: string
  *           description: Branch name
