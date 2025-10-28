@@ -45,7 +45,7 @@ router.get("/", employeeControllers.getAllEmployees);
  *             schema:
  *               $ref: '#/components/schemas/Employee'
  *       '500':
- *         description: Employee ID: {id} not found.
+ *         description: Employee ID not found.
  */
 router.get("/:id", employeeControllers.getEmployeeByID);
 
@@ -125,7 +125,7 @@ router.post(
  *       '400':
  *         description: Validation error
  *       '500':
- *         description: Employee ID: {id} not found.
+ *         description: Employee ID not found.
  */
 router.put(
     "/:id",
@@ -150,7 +150,7 @@ router.put(
  *       '200':
  *         description: Employee deleted successfully
  *       '500':
- *         description: Employee ID: {id} not found.
+ *         description: Employee ID not found.
  */
 router.delete(
     "/:id",
@@ -180,7 +180,7 @@ router.delete(
  *               items:
  *                 $ref: '#/components/schemas/Employee'
  *       '500':
- *         description: `No employees found for branch ID: {branchId}.
+ *         description: No employees found for branch ID.
  */
 router.get("/branch/:branchId", employeeControllers.getAllBranchEmployees);
 
@@ -207,7 +207,7 @@ router.get("/branch/:branchId", employeeControllers.getAllBranchEmployees);
  *               items:
  *                 $ref: '#/components/schemas/Employee'
  *       '500':
- *         description: No employees found for Department: {department}.
+ *         description: No employees found for Department.
  */
 router.get("/department/:department", employeeControllers.getDepartmentEmployees);
 

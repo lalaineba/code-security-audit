@@ -44,7 +44,7 @@ router.get("/", branchControllers.getAllBranches);
  *             schema:
  *               $ref: '#/components/schemas/Branch'
  *       '500':
- *         description: Branch ID: {id} not found.
+ *         description: Branch ID not found.
  */
 router.get("/:id", branchControllers.getBranchByID);
 
@@ -120,7 +120,7 @@ router.post(
  *       '400':
  *         description: Validation error
  *       '500':
- *         description: Branch ID: {id} not found.
+ *         description: Branch ID not found.
  */
 router.put(
     "/:id",
@@ -145,7 +145,7 @@ router.put(
  *       '200':
  *         description: Branch deleted successfully
  *       '500':
- *         description: Branch ID: {id} not found.
+ *         description: Branch ID not found.
  */
 router.delete(
     "/:id",
