@@ -1,8 +1,11 @@
-import swaggerJsdoc from "swagger-jsdoc";
+import swaggerJsdoc, { Options} from "swagger-jsdoc";
+
+const serverUrl: string =
+    process.env.SWAGGER_SERVER_URL || "http://localhost:3000/api/v1";
 
 const swaggerOptions: swaggerJsdoc.Options = {
     definition: {
-        openapi: "3.0.0",
+        openapi: "3.1.0",
         info: {
             title: "Employee Directory and Branch Management API Documentation",
             version: "1.0.0",
@@ -11,8 +14,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         servers: [
             {
-                url: "http://localhost:3000/api/v1",
-                description: "Local server",
+                url: serverUrl,
+                description: process.env.NODE_ENV,
             },
         ],
     },
