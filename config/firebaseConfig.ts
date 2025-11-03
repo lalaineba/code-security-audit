@@ -70,6 +70,9 @@ const initializeFirebaseAdmin = (): App => {
 // Initialize the Firebase Admin app
 const firebaseApp: App = initializeFirebaseAdmin();
 
+// Get a reference to firebase authentication
+const auth: Auth = getAuth(firebaseApp);
+
 // Get a reference to the firestore database
 const db: Firestore = getFirestore(firebaseApp);
 
