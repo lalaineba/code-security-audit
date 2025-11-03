@@ -3,7 +3,7 @@ import { Express } from "express";
 import { generateSwaggerSpec } from "./swaggerOptions";
 
 const setupSwagger = (app: Express): void => {
-    const specs = generateSwaggerSpec();
+    const specs: object = generateSwaggerSpec();
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 };
 
