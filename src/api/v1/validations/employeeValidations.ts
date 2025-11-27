@@ -2,6 +2,52 @@ import Joi from "joi";
 import { RequestSchema } from "../middleware/validate";
 
 /**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Employee:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - position
+ *         - department
+ *         - email
+ *         - phone
+ *         - branchId
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The Firestore document ID for the employee
+ *           example: "fe4ghb67dg2d1ac1"
+ *         name:
+ *           type: string
+ *           description: Full name of the employee
+ *           example: "Alice Johnson"
+ *         position:
+ *           type: string
+ *           description: Job title or position
+ *           example: "Branch Manager"
+ *         department:
+ *           type: string
+ *           description: Department the employee belongs to
+ *           example: "Management"
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Employee email address
+ *           example: "alice.johnson@example.com"
+ *         phone:
+ *           type: string
+ *           description: Contact phone number
+ *           example: "604-555-0148"
+ *         branchId:
+ *           type: integer
+ *           description: Numeric identifier of the branch the employee belongs to
+ *           example: 1
+ */
+
+/**
  * Employee schema organized by request type
  */
 export const employeeSchemas: Record<string, RequestSchema> = {

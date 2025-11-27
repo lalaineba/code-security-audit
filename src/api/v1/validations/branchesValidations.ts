@@ -2,6 +2,36 @@ import Joi from "joi";
 import { RequestSchema } from "../middleware/validate";
 
 /**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Branch:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - address
+ *         - phone
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The Firestore document ID for the branch
+ *           example: "g9sdfh4nc85hd47bvn"
+ *         name:
+ *           type: string
+ *           description: Branch name
+ *           example: "Winnipeg Branch"
+ *         address:
+ *           type: string
+ *           description: Branch address
+ *           example: "1 Portage Ave, Winnipeg, MB, R3B 2B9"
+ *         phone:
+ *           type: string
+ *           description: Branch contact phone number
+ *           example: "204-988-2402"
+ */
+
+/**
  * Branch schema organized by request type
  */
 export const branchSchemas: Record<string, RequestSchema> = {
