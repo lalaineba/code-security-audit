@@ -12,7 +12,6 @@ import { getAuth, Auth } from "firebase-admin/auth";
 /**
  * Retrieves Firebase configuration from environment variables
  * 
- * 
  * @returns {AppOptions} Firebase application configuration object
  * @throws {Error} If any required environment variables are missing
  */
