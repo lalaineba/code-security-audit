@@ -1,7 +1,7 @@
 {
   "name": "bed_assignment2",
   "version": "1.0.0",
-  "description": "",
+  "description": "Architecture highlights:\r - src/api/v1/controllers - HTTP controllers\r - src/api/v1/services - business logic\r - src/api/v1/repositories - Firestore access layer (single place to mock for tests)\r - src/api/v1/validations - Joi schemas used for request validation and OpenAPI components\r - config/ - app configuration (Firebase, Swagger, Helmet, CORS)\r - test/ - Jest unit tests",
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/server.ts",
@@ -23,8 +23,9 @@
   "devDependencies": {
     "@redocly/cli": "^2.10.0",
     "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.3.2",
+    "@types/node": "^24.10.1",
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
@@ -32,10 +33,9 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -46,5 +46,9 @@
     "morgan": "^1.10.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   }
 }

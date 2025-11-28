@@ -23,7 +23,6 @@ interface HealthCheckResponse {
     timestamp: string;
     version: string;
 }
-
 // Middleware START
 app.use(morgan("combined"));
 app.use(helmet());
