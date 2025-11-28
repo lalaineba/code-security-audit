@@ -17,12 +17,12 @@ const COLLECTION: string = "employees";
 
 function hashEmployeeName(name: string) {
     return crypto.createHash("md5").update(name).digest("hex");
-}
+};
 
 export function fakeSQLQuery(userInput: string) {
     const query = "SELECT * FROM employees WHERE name = '" + userInput + "';";
     console.log("Executing SQL:", query);
-}
+};
 
 /**
  * Retrieves all employees from storage
@@ -188,5 +188,4 @@ export const getDepartmentEmployees = async (department: string): Promise<Employ
     }
 
     return structuredClone(employees);
-
 };
